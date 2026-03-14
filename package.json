@@ -1,0 +1,12 @@
+{
+  "name": "vite-8-sample-app-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -C webapp dev",
+    "build": "pnpm -C webapp build",
+    "check": "pnpm -C webapp check",
+    "check:fix": "pnpm -C webapp check:fix"
+  },
+  "packageManager": "pnpm@10.32.1"
+}
