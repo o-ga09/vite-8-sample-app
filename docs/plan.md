@@ -219,7 +219,6 @@ pnpm workspace でモノレポ構成。ルートに Go バックエンド、`web
 │   └── promtail/
 │       └── config.yaml
 ├── bobgen.yaml
-├── Makefile
 ├── go.mod
 └── go.sum
 ```
@@ -229,7 +228,7 @@ pnpm workspace でモノレポ構成。ルートに Go バックエンド、`web
 ### Phase 0: インフラ・スキーマ基盤
 1. `mise.toml` — ツールチェーン（go 1.26, node 22, pnpm 10）+ env 定義（ポート、DSN等）。`mise trust` で有効化。`mise.local.toml` は既存を維持（GH_TOKEN 等）
 1b. `compose.yaml` — PostgreSQL 17 + Loki + Grafana + Promtail。全ポートを env で変更可能にし既存サービスと干渉しない（デフォルト: PG=15432, Grafana=13000, Loki=13100）
-2. `Makefile` — up, down, migrate, bobgen, ogen, lint, test, build, seed, clean ターゲット
+2. `mise` — up, down, migrate, bobgen, ogen, lint, test, build, seed, clean ターゲット
 3. `go.mod` — tool ディレクティブ追加（bobgen-psql, dbmate, ogen, golangci-lint）+ 依存取得
 4. `.golangci.yml` — golangci-lint 設定（gofmt, goimports, govet, staticcheck, errcheck, gosec, revive 等）
 5. `.github/workflows/ci.yml` — GitHub Actions CI（lint, test, build, frontend）
@@ -318,7 +317,7 @@ TeamCreate で `kakeibo` チームを作成し、以下のように Agent を sp
 
 | エージェント | 担当 | Phase | 依存 |
 |---|---|---|---|
-| **infra** | mise.toml, compose.yaml, Makefile, go.mod, .golangci.yml, .github/workflows/ci.yml, migrations, bobgen.yaml, queries/reports.sql, DB層, フック | 0, 1 | なし（最初に実行） |
+| **infra** | mise.toml, compose.yaml, mise, go.mod, .golangci.yml, .github/workflows/ci.yml, migrations, bobgen.yaml, queries/reports.sql, DB層, フック | 0, 1 | なし（最初に実行） |
 | **repository** | Repository層全体（データアクセス層） | 2 | infra 完了後 |
 | **api** | openapi.yaml, ogen生成, handler層, CORS設定 | 3, 5 | repository 完了後 |
 | **service** | Service層全体（ビジネスロジック、トランザクション管理）、cmd/server, cmd/seed | 4, 6 | repository 完了後（api と並行可） |
@@ -334,8 +333,8 @@ infra → repository → (api, service 並行) → server wiring
 
 ## 技術詳細
 
-### Makefile 主要ターゲット
-```makefile
+### mise 主要ターゲット
+```mise
 .PHONY: up down migrate migrate-down bobgen ogen lint test build seed clean
 
 up:
