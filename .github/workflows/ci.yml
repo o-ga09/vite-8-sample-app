@@ -91,5 +91,5 @@ jobs:
       - name: Install vp
         run: |
           curl -fsSL https://vite.plus | bash
-      - run: pnpm run check
-      - run: pnpm test
+      - run: vp check
+      - run: vp test
