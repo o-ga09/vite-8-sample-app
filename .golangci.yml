@@ -1,0 +1,27 @@
+version: "2"
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
+linters:
+  settings:
+    govet:
+      enable:
+        - shadow
+    misspell:
+      locale: US
+  enable:
+    - govet
+    - staticcheck
+    - errcheck
+    - gosec
+    - revive
+    - unconvert
+    - unparam
+    - unused
+    - ineffassign
+    - misspell
+    - dupl
+    - gocritic

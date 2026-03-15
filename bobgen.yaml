@@ -1,0 +1,18 @@
+driver: psql
+out: internal/models
+pkgname: models
+dsn: ${DATABASE_URL}
+wipe: true
+no_factory: false
+
+generator:
+  tags: true
+
+plugins:
+  - models
+  - enums
+  - factory
+  - where
+  - loaders
+  - joins
+  - dberrors
