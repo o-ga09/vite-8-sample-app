@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-      - run: vp install
       - run: go mod download
       - run: go tool golangci-lint run
 
@@ -38,7 +37,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-      - run: vp install
       - run: go mod download
       - run: go test ./...
 
@@ -47,7 +45,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-      - run: vp install
       - run: go mod download
       - run: go build ./...
 
@@ -58,7 +55,10 @@ jobs:
         working-directory: webapp
     steps:
       - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v2
-      - run: vp install
-      - run: vp check
-      - run: vp test
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run check
+      - run: pnpm test
