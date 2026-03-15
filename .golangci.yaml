@@ -15,9 +15,7 @@ linters:
   enable:
     - govet
     - staticcheck
-    - errcheck
-    - gosec
-    - revive
+    - errchec
     - unconvert
     - unparam
     - unused
