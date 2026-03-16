@@ -1,0 +1,4 @@
+{
+  "$schema": "https://oxc.rs/schema/oxfmt.json",
+  "printWidth": 120
+}
