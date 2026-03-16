@@ -1,22 +1,25 @@
 version: "2"
+
 formatters:
   enable:
-    - goimports
     - gofmt
+    - goimports
 
 linters:
   settings:
     govet:
       enable:
         - shadow
-    gocyclo:
-      min-complexity: 30
     misspell:
       locale: US
   enable:
-    - unused
-    - errcheck
     - govet
-    - misspell
     - staticcheck
-    - whitespace
+    - errcheck
+    - unconvert
+    - unparam
+    - unused
+    - ineffassign
+    - misspell
+    - dupl
+    - gocritic

@@ -15,6 +15,10 @@ run = "docker compose down"
 description = "Run database migrations"
 run = "go tool dbmate -d ./db/migrations -u \"${DATABASE_URL}\" up"
 
+[tasks."migrate-down"]
+description = "Rollback one migration"
+run = "go tool dbmate -d ./db/migrations -u \"${DATABASE_URL}\" down"
+
 [tasks.bobgen]
 description = "Generate bob ORM code from DB schema"
 run = "go tool bobgen-psql -c bobgen.yaml"
@@ -23,9 +27,25 @@ run = "go tool bobgen-psql -c bobgen.yaml"
 description = "Generate ogen server code from OpenAPI spec"
 run = "go tool ogen -target internal/oas -package oas -clean api/openapi.yaml"
 
+[tasks.lint]
+description = "Run static analysis"
+run = "go tool golangci-lint run"
+
+[tasks.test]
+description = "Run all tests"
+run = "go test ./..."
+
+[tasks.build]
+description = "Build backend and frontend"
+run = "go build ./... && cd webapp && vp build"
+
 [tasks.seed]
 description = "Insert sample data"
-run = "go run ./cmd/seed/"
+run = "if [ -d ./cmd/seed ]; then go run ./cmd/seed/; else echo 'cmd/seed does not exist yet'; fi"
+
+[tasks.clean]
+description = "Clean generated artifacts"
+run = "rm -rf ./internal/oas ./webapp/dist ./dist"
 
 [tasks.server]
 description = "Start API server"
@@ -33,21 +53,21 @@ run = "go run ./cmd/server/"
 
 [tasks.dev]
 description = "Start frontend dev server"
-run = "pnpm dev"
+run = "cd webapp && vp dev"
 
 [tasks."generate:api"]
 description = "Generate TypeScript types from OpenAPI spec"
-run = "cd webapp && pnpm generate:api"
+run = "cd webapp && vp run generate:api"
 
 [env]
-POSTGRES_PORT = "5432"
+POSTGRES_PORT = "15432"
 POSTGRES_USER = "postgres"
 POSTGRES_PASSWORD = "password"
 POSTGRES_DB = "taskman"
-GRAFANA_PORT = "3000"
-LOKI_PORT = "3100"
-APP_PORT = "8080"
-WEBAPP_PORT = "3001"
+GRAFANA_PORT = "13000"
+LOKI_PORT = "13100"
+APP_PORT = "18080"
+WEBAPP_PORT = "13001"
 NEXT_PUBLIC_API_URL = "http://localhost:{{env.APP_PORT}}"
 DATABASE_URL = "postgres://{{env.POSTGRES_USER}}:{{env.POSTGRES_PASSWORD}}@localhost:{{env.POSTGRES_PORT}}/{{env.POSTGRES_DB}}?sslmode=disable"
 PSQL_DSN = "{{env.DATABASE_URL}}"

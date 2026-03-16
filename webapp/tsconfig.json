@@ -23,7 +23,7 @@
     "noUncheckedSideEffectImports": true,
 
     /* React */
-     "jsx": "react-jsx",
+    "jsx": "react-jsx"
   },
   "include": ["src"]
 }
