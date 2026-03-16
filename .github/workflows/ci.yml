@@ -88,5 +88,6 @@ jobs:
           path: '**/node_modules'
           key: ${{ steps.node_modules_cache_id.outputs.cache-primary-key }}
 
-      - run: pnpm run check
+      - run: pnpm run lint
+      - run: pnpm run fmt
       - run: pnpm run test
