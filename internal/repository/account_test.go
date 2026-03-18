@@ -132,8 +132,8 @@ func TestAccountRepository_List(t *testing.T) {
 
 	f := factory.New()
 	for i := 0; i < 2; i++ {
-		if _, err := f.NewAccount(factory.AccountMods.WithExistingWorkspace(ws)).Create(ctx, tx); err != nil {
-			t.Fatalf("factory account create(%d) failed: %v", i, err)
+		if _, createErr := f.NewAccount(factory.AccountMods.WithExistingWorkspace(ws)).Create(ctx, tx); createErr != nil {
+			t.Fatalf("factory account create(%d) failed: %v", i, createErr)
 		}
 	}
 
@@ -201,7 +201,7 @@ func TestAccountRepository_Delete(t *testing.T) {
 	}
 
 	r := repository.NewAccountRepository()
-	if err := r.Delete(ctx, tx, acc.WorkspaceID, acc.ID); err != nil {
+	if err = r.Delete(ctx, tx, acc.WorkspaceID, acc.ID); err != nil {
 		t.Fatalf("Delete failed: %v", err)
 	}
 

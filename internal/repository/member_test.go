@@ -130,8 +130,8 @@ func TestMemberRepository_List(t *testing.T) {
 
 	f := factory.New()
 	for i := 0; i < 2; i++ {
-		if _, err := f.NewMember(factory.MemberMods.WithExistingWorkspace(ws)).Create(ctx, tx); err != nil {
-			t.Fatalf("factory member create(%d) failed: %v", i, err)
+		if _, createErr := f.NewMember(factory.MemberMods.WithExistingWorkspace(ws)).Create(ctx, tx); createErr != nil {
+			t.Fatalf("factory member create(%d) failed: %v", i, createErr)
 		}
 	}
 
@@ -199,7 +199,7 @@ func TestMemberRepository_Delete(t *testing.T) {
 	}
 
 	r := repository.NewMemberRepository()
-	if err := r.Delete(ctx, tx, member.WorkspaceID, member.ID); err != nil {
+	if err = r.Delete(ctx, tx, member.WorkspaceID, member.ID); err != nil {
 		t.Fatalf("Delete failed: %v", err)
 	}
 

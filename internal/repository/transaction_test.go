@@ -225,10 +225,10 @@ func TestTransactionRepository_ListByPeriod(t *testing.T) {
 		OccurredAt:      omit.From(now.Add(-30 * 24 * time.Hour)),
 	}
 
-	if _, err := dbgen.Transactions.Insert(setterIn).One(ctx, tx); err != nil {
+	if _, err = dbgen.Transactions.Insert(setterIn).One(ctx, tx); err != nil {
 		t.Fatalf("insert in-period tx: %v", err)
 	}
-	if _, err := dbgen.Transactions.Insert(setterOut).One(ctx, tx); err != nil {
+	if _, err = dbgen.Transactions.Insert(setterOut).One(ctx, tx); err != nil {
 		t.Fatalf("insert out-period tx: %v", err)
 	}
 
@@ -297,7 +297,7 @@ func TestTransactionRepository_Delete(t *testing.T) {
 	created := createIncomeTransaction(ctx, t, tx, wsID, accountID, catID)
 
 	r := repository.NewTransactionRepository()
-	if err := r.Delete(ctx, tx, wsID, created.ID); err != nil {
+	if err = r.Delete(ctx, tx, wsID, created.ID); err != nil {
 		t.Fatalf("Delete failed: %v", err)
 	}
 

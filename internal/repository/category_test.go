@@ -217,7 +217,7 @@ func TestCategoryRepository_Delete(t *testing.T) {
 	cat := createCategoryDirect(ctx, t, tx, ws.ID)
 
 	r := repository.NewCategoryRepository()
-	if err := r.Delete(ctx, tx, cat.WorkspaceID, cat.ID); err != nil {
+	if err = r.Delete(ctx, tx, cat.WorkspaceID, cat.ID); err != nil {
 		t.Fatalf("Delete failed: %v", err)
 	}
 
