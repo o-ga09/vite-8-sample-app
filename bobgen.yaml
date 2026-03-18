@@ -1,18 +1,34 @@
-driver: psql
-out: internal/models
-pkgname: models
-dsn: ${DATABASE_URL}
-wipe: true
-no_factory: false
-
-generator:
-  tags: true
-
+struct_tag_casing: snake
+tags: [json]
+aliases:
+  transactions:
+    relationships:
+      'transactions.fk_transactions_account': 'Account'
+      'transactions.fk_transactions_counterparty_account': 'CounterpartyAccount'
+  accounts:
+    relationships:
+      'transactions.fk_transactions_account': 'Transactions'
+      'transactions.fk_transactions_counterparty_account': 'CounterpartyTransactions'
 plugins:
-  - models
-  - enums
-  - factory
-  - where
-  - loaders
-  - joins
-  - dberrors
+  models:
+    destination: "internal/infra/dbgen"
+    pkgname: "dbgen"
+  enums:
+    destination: "internal/infra/dbgen/dbenums"
+  factory:
+    destination: "internal/infra/dbgen/factory"
+  where: {}
+  loaders: {}
+  joins: {}
+  dberrors: {}
+  dbinfo:
+    disabled: true
+psql:
+  dsn: "postgres://postgres:password@localhost:5432/taskman?sslmode=disable"
+  uuid_pkg: google
+  driver: "github.com/jackc/pgx/v5/stdlib"
+  queries:
+    - "./queries"
+  except:
+    schema_migrations: []
+    "*": [created_at, updated_at]
