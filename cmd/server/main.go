@@ -96,7 +96,7 @@ func run() error {
 	// Echo の設定
 	e := echo.New()
 	e.HideBanner = true
-	e.Use(echomiddleware.Logger())
+	e.Use(echomiddleware.RequestLogger())
 	e.Use(echomiddleware.Recover())
 	e.Use(echomiddleware.RequestID())
 	e.Use(echomiddleware.CORSWithConfig(echomiddleware.CORSConfig{
