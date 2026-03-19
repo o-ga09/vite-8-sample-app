@@ -15,6 +15,10 @@ dist-ssr
 # Screenshots (captured by ui-screenshot skill)
 webapp/screenshots/
 
+# Go compiled binaries
+/seed
+/server
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
