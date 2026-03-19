@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/o-ga09/vite-8-sample-app/internal/service"
 	oas "github.com/o-ga09/vite-8-sample-app/internal/oas"
+	"github.com/o-ga09/vite-8-sample-app/internal/service"
 )
 
 // Options holds the dependencies for the Handler.
