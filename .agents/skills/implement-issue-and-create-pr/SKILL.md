@@ -61,6 +61,7 @@ git-wt feature/<issue_number>-<short-description>
 ### 🔴 Red — 失敗するテストを書く
 
 - まず**テストファイルを先に作成**する
+- **`package` 宣言の自動挿入に注意**: VS Code の Go 拡張機能が新規ファイル作成時に `package XXX` を自動挿入する場合がある。ファイル作成直後に `package` 宣言が正しく入っているか確認し、挿入されていない場合は手動で追加する。
 - テストコードだけ書き、プロダクションコードはまだ書かない
 - テストが「コンパイルエラー」または「アサーション失敗」で落ちることを確認する
 - テスト名は「何をすべきか」が明確にわかる名前にする
@@ -78,6 +79,175 @@ git-wt feature/<issue_number>-<short-description>
 - リファクタリング後も全テストがパスすることを確認する
 
 このサイクルを**機能の最小単位ごと**に繰り返す。
+
+---
+
+## Goテストの規約
+
+### テスト検証ライブラリ
+
+Goのテストでは必ず `github.com/stretchr/testify` を使用する。
+
+```go
+import (
+    "testing"
+    "github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/require"
+)
+```
+
+- `assert.*` — テスト失敗後も処理を継続したい場合
+- `require.*` — テスト失敗時に即座に終了させたい場合（セットアップ系に多用）
+
+### テーブルドリブンテスト
+
+Goのテストは必ずテーブルドリブン形式で書く。
+
+```go
+func TestXxx(t *testing.T) {
+    tests := []struct {
+        name    string
+        input   SomeInput
+        want    SomeOutput
+        wantErr bool
+    }{
+        {
+            name:  "正常系: <説明>",
+            input: SomeInput{...},
+            want:  SomeOutput{...},
+        },
+        {
+            name:    "異常系: <説明>",
+            input:   SomeInput{...},
+            wantErr: true,
+        },
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            got, err := FunctionUnderTest(tt.input)
+            if tt.wantErr {
+                require.Error(t, err)
+                return
+            }
+            require.NoError(t, err)
+            assert.Equal(t, tt.want, got)
+        })
+    }
+}
+```
+
+### データ取得テストのFactoryモデル
+
+DBアクセス・データ取得を伴うテストでは、Factoryモデル（`bob` の Factory）を使用してテストデータを生成する。
+
+```go
+// Factoryでテストデータを作成する例
+func TestRepository_GetSomething(t *testing.T) {
+    tests := []struct {
+        name    string
+        setup   func(t *testing.T) SomeModel
+        want    SomeOutput
+        wantErr bool
+    }{
+        {
+            name: "正常系: データが存在する場合",
+            setup: func(t *testing.T) SomeModel {
+                // bobのFactoryを使ってテストデータを挿入
+                m, err := factory.NewSomeModel().Create(ctx, db)
+                require.NoError(t, err)
+                return m
+            },
+            wantErr: false,
+        },
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            record := tt.setup(t)
+            got, err := repo.GetSomething(ctx, record.ID)
+            if tt.wantErr {
+                require.Error(t, err)
+                return
+            }
+            require.NoError(t, err)
+            assert.Equal(t, tt.want, got)
+        })
+    }
+}
+```
+
+**ポイント:**
+- `setup` フィールドでテストごとにFactoryを使ったデータ準備を行う
+- テスト後のクリーンアップは `t.Cleanup` または `t.TempDir` を活用する
+- Factoryは `internal/infra/dbgen/` 配下の bobgen 生成コードを参照する
+
+### モック生成（moq）
+
+外部依存（Repository・外部APIクライアントなど）のモックは **moq** を使ってinterfaceから自動生成する。手書きモックは禁止。
+
+#### インストール
+
+```bash
+go install github.com/matryer/moq@latest
+```
+
+#### モックの生成
+
+```bash
+# 書式: moq -out <出力ファイル> <パッケージパス> <Interface名>...
+moq -out internal/service/mock_repository_test.go ./internal/repository SomeRepository
+```
+
+- 出力先は対象パッケージの `*_test.go` ファイルにし、テスト時のみ参照できるようにする
+- 生成コマンドは対象ファイルの冒頭に `//go:generate` ディレクティブとして記録する
+
+```go
+//go:generate moq -out mock_some_repository_test.go . SomeRepository
+```
+
+#### 使用例
+
+```go
+func TestService_DoSomething(t *testing.T) {
+    tests := []struct {
+        name    string
+        mock    func() *SomeRepositoryMock
+        want    SomeOutput
+        wantErr bool
+    }{
+        {
+            name: "正常系: リポジトリが値を返す場合",
+            mock: func() *SomeRepositoryMock {
+                return &SomeRepositoryMock{
+                    GetFunc: func(ctx context.Context, id string) (SomeModel, error) {
+                        return SomeModel{ID: id}, nil
+                    },
+                }
+            },
+            want: SomeOutput{...},
+        },
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            svc := NewSomeService(tt.mock())
+            got, err := svc.DoSomething(context.Background(), "id-1")
+            if tt.wantErr {
+                require.Error(t, err)
+                return
+            }
+            require.NoError(t, err)
+            assert.Equal(t, tt.want, got)
+        })
+    }
+}
+```
+
+**ポイント:**
+- モックは必ず `go generate` で再生成できる状態に保つ
+- `moq` が生成した `*Mock` 型の `Calls` フィールドで呼び出し回数・引数を検証できる
+- `assert.Len(t, mock.GetCalls(), 1)` のように呼び出し検証を積極的に行う
 
 ---
 
