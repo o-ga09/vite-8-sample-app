@@ -9,9 +9,9 @@ import (
 
 	"github.com/aarondl/opt/null"
 	"github.com/google/uuid"
+	inframd "github.com/o-ga09/vite-8-sample-app/internal/infra/db"
 	enums "github.com/o-ga09/vite-8-sample-app/internal/infra/dbgen/dbenums"
 	"github.com/o-ga09/vite-8-sample-app/internal/infra/dbgen/factory"
-	inframd "github.com/o-ga09/vite-8-sample-app/internal/infra/db"
 	"github.com/shopspring/decimal"
 )
 

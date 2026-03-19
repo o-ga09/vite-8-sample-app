@@ -13,11 +13,11 @@ import (
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
-	api "github.com/o-ga09/vite-8-sample-app/internal/oas"
 	"github.com/o-ga09/vite-8-sample-app/internal/handler"
 	inframd "github.com/o-ga09/vite-8-sample-app/internal/infra/db"
 	"github.com/o-ga09/vite-8-sample-app/internal/infra/dbgen"
 	"github.com/o-ga09/vite-8-sample-app/internal/infra/hook"
+	api "github.com/o-ga09/vite-8-sample-app/internal/oas"
 	"github.com/o-ga09/vite-8-sample-app/internal/repository"
 	"github.com/o-ga09/vite-8-sample-app/internal/service"
 )
