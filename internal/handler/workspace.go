@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/google/uuid"
 	"github.com/o-ga09/vite-8-sample-app/internal/infra/dbgen"
 	oas "github.com/o-ga09/vite-8-sample-app/internal/oas"
 	"github.com/o-ga09/vite-8-sample-app/internal/service"
@@ -70,7 +69,7 @@ func (h *Handler) DeleteWorkspace(ctx context.Context, params oas.DeleteWorkspac
 
 func toOASWorkspace(ws *dbgen.Workspace) *oas.Workspace {
 	return &oas.Workspace{
-		ID:   uuid.UUID(ws.ID),
+		ID:   ws.ID,
 		Name: ws.Name,
 	}
 }

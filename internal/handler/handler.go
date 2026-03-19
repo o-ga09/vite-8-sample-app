@@ -7,22 +7,22 @@ import (
 
 // Options holds the dependencies for the Handler.
 type Options struct {
-	WorkspaceService  service.WorkspaceService
-	MemberService     service.MemberService
-	AccountService    service.AccountService
-	CategoryService   service.CategoryService
+	WorkspaceService   service.WorkspaceService
+	MemberService      service.MemberService
+	AccountService     service.AccountService
+	CategoryService    service.CategoryService
 	TransactionService service.TransactionService
-	ReportService     service.ReportService
+	ReportService      service.ReportService
 }
 
 // Handler implements oas.Handler.
 type Handler struct {
-	workspaceSvc  service.WorkspaceService
-	memberSvc     service.MemberService
-	accountSvc    service.AccountService
-	categorySvc   service.CategoryService
+	workspaceSvc   service.WorkspaceService
+	memberSvc      service.MemberService
+	accountSvc     service.AccountService
+	categorySvc    service.CategoryService
 	transactionSvc service.TransactionService
-	reportSvc     service.ReportService
+	reportSvc      service.ReportService
 }
 
 var _ oas.Handler = (*Handler)(nil)
@@ -30,12 +30,12 @@ var _ oas.Handler = (*Handler)(nil)
 // New creates a new Handler with the given options.
 func New(opts Options) *Handler {
 	return &Handler{
-		workspaceSvc:  opts.WorkspaceService,
-		memberSvc:     opts.MemberService,
-		accountSvc:    opts.AccountService,
-		categorySvc:   opts.CategoryService,
+		workspaceSvc:   opts.WorkspaceService,
+		memberSvc:      opts.MemberService,
+		accountSvc:     opts.AccountService,
+		categorySvc:    opts.CategoryService,
 		transactionSvc: opts.TransactionService,
-		reportSvc:     opts.ReportService,
+		reportSvc:      opts.ReportService,
 	}
 }
 
