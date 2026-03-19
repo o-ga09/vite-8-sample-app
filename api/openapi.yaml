@@ -1,0 +1,1030 @@
+openapi: "3.0.3"
+info:
+  title: Kakeibo API
+  description: マルチテナント家計簿システム API
+  version: "1.0.0"
+servers:
+  - url: http://localhost:18080
+    description: Local development server
+
+paths:
+  /workspaces:
+    get:
+      operationId: listWorkspaces
+      summary: ワークスペース一覧取得
+      tags: [workspaces]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Workspace"
+    post:
+      operationId: createWorkspace
+      summary: ワークスペース作成
+      tags: [workspaces]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWorkspaceRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getWorkspace
+      summary: ワークスペース詳細取得
+      tags: [workspaces]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateWorkspace
+      summary: ワークスペース更新
+      tags: [workspaces]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateWorkspaceRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteWorkspace
+      summary: ワークスペース削除
+      tags: [workspaces]
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}/members:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: listMembers
+      summary: メンバー一覧取得
+      tags: [members]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Member"
+    post:
+      operationId: createMember
+      summary: メンバー追加
+      tags: [members]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMemberRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}/members/{memberId}:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: memberId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getMember
+      summary: メンバー詳細取得
+      tags: [members]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateMember
+      summary: メンバー更新
+      tags: [members]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMemberRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteMember
+      summary: メンバー削除
+      tags: [members]
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}/accounts:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: listAccounts
+      summary: 口座一覧取得
+      tags: [accounts]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Account"
+    post:
+      operationId: createAccount
+      summary: 口座作成
+      tags: [accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccountRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}/accounts/{accountId}:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getAccount
+      summary: 口座詳細取得
+      tags: [accounts]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateAccount
+      summary: 口座更新
+      tags: [accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAccountRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteAccount
+      summary: 口座削除
+      tags: [accounts]
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}/categories:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: listCategories
+      summary: カテゴリ一覧取得
+      tags: [categories]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+    post:
+      operationId: createCategory
+      summary: カテゴリ作成
+      tags: [categories]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCategoryRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}/categories/{categoryId}:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: categoryId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getCategory
+      summary: カテゴリ詳細取得
+      tags: [categories]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateCategory
+      summary: カテゴリ更新
+      tags: [categories]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCategoryRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteCategory
+      summary: カテゴリ削除
+      tags: [categories]
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}/transactions:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: listTransactions
+      summary: 取引一覧取得（フィルタ可能）
+      tags: [transactions]
+      parameters:
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+    post:
+      operationId: createTransaction
+      summary: 取引作成
+      tags: [transactions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTransactionRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}/transactions/{txId}:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: txId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getTransaction
+      summary: 取引詳細取得
+      tags: [transactions]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateTransaction
+      summary: 取引更新
+      tags: [transactions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTransactionRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteTransaction
+      summary: 取引削除
+      tags: [transactions]
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /workspaces/{wsId}/reports/dashboard:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getDashboard
+      summary: ダッシュボード概要取得
+      tags: [reports]
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardReport"
+
+  /workspaces/{wsId}/reports/category-expenses:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getCategoryExpenses
+      summary: カテゴリ別支出集計取得
+      tags: [reports]
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryExpenseItem"
+
+  /workspaces/{wsId}/reports/account-balances:
+    parameters:
+      - name: wsId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getAccountBalances
+      summary: 口座別残高サマリ取得
+      tags: [reports]
+      parameters:
+        - name: asOf
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AccountBalanceItem"
+
+components:
+  schemas:
+    # ---- Workspace ----
+    Workspace:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 100
+
+    CreateWorkspaceRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+
+    UpdateWorkspaceRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+
+    # ---- Member ----
+    MemberRole:
+      type: string
+      enum: [owner, editor, viewer]
+
+    Member:
+      type: object
+      required: [id, workspaceId, email, displayName, role]
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspaceId:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+          maxLength: 100
+        role:
+          $ref: "#/components/schemas/MemberRole"
+
+    CreateMemberRequest:
+      type: object
+      required: [email, displayName, role]
+      properties:
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+          maxLength: 100
+        role:
+          $ref: "#/components/schemas/MemberRole"
+
+    UpdateMemberRequest:
+      type: object
+      required: [displayName, role]
+      properties:
+        displayName:
+          type: string
+          maxLength: 100
+        role:
+          $ref: "#/components/schemas/MemberRole"
+
+    # ---- Account ----
+    AccountType:
+      type: string
+      enum: [cash, bank, credit_card, e_money, investment]
+
+    Account:
+      type: object
+      required: [id, workspaceId, name, accountType, initialBalance]
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspaceId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 100
+        accountType:
+          $ref: "#/components/schemas/AccountType"
+        initialBalance:
+          type: string
+          description: Decimal amount (e.g. "1000.00")
+
+    CreateAccountRequest:
+      type: object
+      required: [name, accountType, initialBalance]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        accountType:
+          $ref: "#/components/schemas/AccountType"
+        initialBalance:
+          type: string
+          description: Decimal amount (e.g. "1000.00")
+
+    UpdateAccountRequest:
+      type: object
+      required: [name, accountType]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        accountType:
+          $ref: "#/components/schemas/AccountType"
+
+    # ---- Category ----
+    CategoryType:
+      type: string
+      enum: [income, expense]
+
+    Category:
+      type: object
+      required: [id, workspaceId, name, categoryType]
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspaceId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 100
+        categoryType:
+          $ref: "#/components/schemas/CategoryType"
+        parentId:
+          type: string
+          format: uuid
+          nullable: true
+
+    CreateCategoryRequest:
+      type: object
+      required: [name, categoryType]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        categoryType:
+          $ref: "#/components/schemas/CategoryType"
+        parentId:
+          type: string
+          format: uuid
+          nullable: true
+
+    UpdateCategoryRequest:
+      type: object
+      required: [name, categoryType]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        categoryType:
+          $ref: "#/components/schemas/CategoryType"
+        parentId:
+          type: string
+          format: uuid
+          nullable: true
+
+    # ---- Transaction ----
+    TransactionType:
+      type: string
+      enum: [income, expense, transfer]
+
+    Transaction:
+      type: object
+      required: [id, workspaceId, transactionType, amount, occurredAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspaceId:
+          type: string
+          format: uuid
+        transactionType:
+          $ref: "#/components/schemas/TransactionType"
+        accountId:
+          type: string
+          format: uuid
+          nullable: true
+        counterpartyAccountId:
+          type: string
+          format: uuid
+          nullable: true
+        categoryId:
+          type: string
+          format: uuid
+          nullable: true
+        amount:
+          type: string
+          description: Decimal amount (e.g. "1000.00")
+        occurredAt:
+          type: string
+          format: date-time
+        description:
+          type: string
+          nullable: true
+
+    CreateTransactionRequest:
+      type: object
+      required: [transactionType, amount, occurredAt]
+      properties:
+        transactionType:
+          $ref: "#/components/schemas/TransactionType"
+        accountId:
+          type: string
+          format: uuid
+          nullable: true
+        counterpartyAccountId:
+          type: string
+          format: uuid
+          nullable: true
+        categoryId:
+          type: string
+          format: uuid
+          nullable: true
+        amount:
+          type: string
+          description: Decimal amount (e.g. "1000.00")
+        occurredAt:
+          type: string
+          format: date-time
+        description:
+          type: string
+          nullable: true
+
+    UpdateTransactionRequest:
+      type: object
+      required: [transactionType, amount, occurredAt]
+      properties:
+        transactionType:
+          $ref: "#/components/schemas/TransactionType"
+        accountId:
+          type: string
+          format: uuid
+          nullable: true
+        counterpartyAccountId:
+          type: string
+          format: uuid
+          nullable: true
+        categoryId:
+          type: string
+          format: uuid
+          nullable: true
+        amount:
+          type: string
+          description: Decimal amount (e.g. "1000.00")
+        occurredAt:
+          type: string
+          format: date-time
+        description:
+          type: string
+          nullable: true
+
+    # ---- Reports ----
+    DashboardReport:
+      type: object
+      required: [workspaceId, totalIncome, totalExpense, netFlow, transactionCount]
+      properties:
+        workspaceId:
+          type: string
+          format: uuid
+        totalIncome:
+          type: string
+          description: Decimal amount
+        totalExpense:
+          type: string
+          description: Decimal amount
+        netFlow:
+          type: string
+          description: Decimal amount
+        transactionCount:
+          type: integer
+          format: int64
+
+    CategoryExpenseItem:
+      type: object
+      required: [categoryId, categoryName, totalExpense]
+      properties:
+        categoryId:
+          type: string
+          format: uuid
+        categoryName:
+          type: string
+        totalExpense:
+          type: string
+          description: Decimal amount
+
+    AccountBalanceItem:
+      type: object
+      required: [accountId, accountName, accountType, currentBalance]
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        accountName:
+          type: string
+        accountType:
+          $ref: "#/components/schemas/AccountType"
+        currentBalance:
+          type: string
+          description: Decimal amount
+
+    # ---- Error ----
+    ErrorResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+        code:
+          type: string
