@@ -23,3 +23,8 @@ linters:
     - misspell
     - dupl
     - gocritic
+  exclusions:
+    rules:
+      - path: internal/repository/
+        linters:
+          - dupl
