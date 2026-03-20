@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -7,13 +8,16 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { apiClient } from "@/lib/api/client";
-import type { components } from "@/lib/api/schema";
+import {
+  useListTransactions,
+  getListTransactionsQueryKey,
+  useCreateTransaction,
+  useUpdateTransaction,
+  useDeleteTransaction,
+} from "@/lib/api/generated/transactions/transactions";
+import type { Transaction, TransactionType } from "@/lib/api/model";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { format } from "date-fns";
-
-type Transaction = components["schemas"]["Transaction"];
-type TransactionType = components["schemas"]["TransactionType"];
 
 export const Route = createFileRoute("/workspaces/$wsId/transactions/")({
   component: TransactionsPage,
@@ -42,30 +46,48 @@ const emptyForm = {
 
 function TransactionsPage() {
   const { wsId } = Route.useParams();
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<Transaction | null>(null);
   const [form, setForm] = useState(emptyForm);
-  const [saving, setSaving] = useState(false);
 
-  const fetchTransactions = useCallback(async () => {
-    setLoading(true);
-    const { data, error: err } = await apiClient.GET("/workspaces/{wsId}/transactions", {
-      params: { path: { wsId } },
+  const { data: listResult, isLoading } = useListTransactions(wsId);
+  const transactions = listResult?.data ?? [];
+
+  const invalidate = () =>
+    queryClient.invalidateQueries({
+      queryKey: getListTransactionsQueryKey(wsId),
     });
-    if (err) {
-      setError("取引の取得に失敗しました");
-    } else {
-      setTransactions(data ?? []);
-    }
-    setLoading(false);
-  }, [wsId]);
 
-  useEffect(() => {
-    fetchTransactions();
-  }, [fetchTransactions]);
+  const createMutation = useCreateTransaction({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        setOpen(false);
+      },
+      onError: () => setError("取引の作成に失敗しました"),
+    },
+  });
+  const updateMutation = useUpdateTransaction({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        setOpen(false);
+      },
+      onError: () => setError("取引の更新に失敗しました"),
+    },
+  });
+  const deleteMutation = useDeleteTransaction({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+      },
+      onError: () => setError("取引の削除に失敗しました"),
+    },
+  });
+
+  const saving = createMutation.isPending || updateMutation.isPending;
 
   const openCreate = () => {
     setEditTarget(null);
@@ -86,10 +108,8 @@ function TransactionsPage() {
     setOpen(true);
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!form.amount || !form.occurredAt) return;
-    setSaving(true);
-
     const body = {
       transactionType: form.transactionType,
       amount: form.amount,
@@ -99,33 +119,16 @@ function TransactionsPage() {
       categoryId: form.categoryId || null,
       counterpartyAccountId: null,
     };
-
     if (editTarget) {
-      const { error: err } = await apiClient.PUT("/workspaces/{wsId}/transactions/{txId}", {
-        params: { path: { wsId, txId: editTarget.id } },
-        body,
-      });
-      if (err) setError("取引の更新に失敗しました");
+      updateMutation.mutate({ wsId, txId: editTarget.id, data: body });
     } else {
-      const { error: err } = await apiClient.POST("/workspaces/{wsId}/transactions", {
-        params: { path: { wsId } },
-        body,
-      });
-      if (err) setError("取引の作成に失敗しました");
+      createMutation.mutate({ wsId, data: body });
     }
-
-    setSaving(false);
-    setOpen(false);
-    fetchTransactions();
   };
 
-  const handleDelete = async (txId: string) => {
+  const handleDelete = (txId: string) => {
     if (!confirm("この取引を削除しますか？")) return;
-    const { error: err } = await apiClient.DELETE("/workspaces/{wsId}/transactions/{txId}", {
-      params: { path: { wsId, txId } },
-    });
-    if (err) setError("取引の削除に失敗しました");
-    else fetchTransactions();
+    deleteMutation.mutate({ wsId, txId });
   };
 
   const formatAmount = (val: string) =>
@@ -146,7 +149,7 @@ function TransactionsPage() {
 
       {error && <p className="text-destructive text-sm mb-4">{error}</p>}
 
-      {loading ? (
+      {isLoading ? (
         <p className="text-muted-foreground text-sm">読み込み中...</p>
       ) : transactions.length === 0 ? (
         <Card>

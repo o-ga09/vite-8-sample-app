@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -7,12 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { apiClient } from "@/lib/api/client";
-import type { components } from "@/lib/api/schema";
+import {
+  useListAccounts,
+  getListAccountsQueryKey,
+  useCreateAccount,
+  useUpdateAccount,
+  useDeleteAccount,
+} from "@/lib/api/generated/accounts/accounts";
+import type { Account, AccountType } from "@/lib/api/model";
 import { Plus, Pencil, Trash2 } from "lucide-react";
-
-type Account = components["schemas"]["Account"];
-type AccountType = components["schemas"]["AccountType"];
 
 export const Route = createFileRoute("/workspaces/$wsId/accounts/")({
   component: AccountsPage,
@@ -34,30 +38,45 @@ const emptyForm = {
 
 function AccountsPage() {
   const { wsId } = Route.useParams();
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<Account | null>(null);
   const [form, setForm] = useState(emptyForm);
-  const [saving, setSaving] = useState(false);
 
-  const fetchAccounts = useCallback(async () => {
-    setLoading(true);
-    const { data, error: err } = await apiClient.GET("/workspaces/{wsId}/accounts", {
-      params: { path: { wsId } },
-    });
-    if (err) {
-      setError("口座の取得に失敗しました");
-    } else {
-      setAccounts(data ?? []);
-    }
-    setLoading(false);
-  }, [wsId]);
+  const { data: listResult, isLoading } = useListAccounts(wsId);
+  const accounts = listResult?.data ?? [];
 
-  useEffect(() => {
-    fetchAccounts();
-  }, [fetchAccounts]);
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: getListAccountsQueryKey(wsId) });
+
+  const createMutation = useCreateAccount({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        setOpen(false);
+      },
+      onError: () => setError("口座の作成に失敗しました"),
+    },
+  });
+  const updateMutation = useUpdateAccount({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        setOpen(false);
+      },
+      onError: () => setError("口座の更新に失敗しました"),
+    },
+  });
+  const deleteMutation = useDeleteAccount({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+      },
+      onError: () => setError("口座の削除に失敗しました"),
+    },
+  });
+
+  const saving = createMutation.isPending || updateMutation.isPending;
 
   const openCreate = () => {
     setEditTarget(null);
@@ -75,40 +94,29 @@ function AccountsPage() {
     setOpen(true);
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!form.name.trim()) return;
-    setSaving(true);
-
     if (editTarget) {
-      const { error: err } = await apiClient.PUT("/workspaces/{wsId}/accounts/{accountId}", {
-        params: { path: { wsId, accountId: editTarget.id } },
-        body: { name: form.name, accountType: form.accountType },
+      updateMutation.mutate({
+        wsId,
+        accountId: editTarget.id,
+        data: { name: form.name, accountType: form.accountType },
       });
-      if (err) setError("口座の更新に失敗しました");
     } else {
-      const { error: err } = await apiClient.POST("/workspaces/{wsId}/accounts", {
-        params: { path: { wsId } },
-        body: {
+      createMutation.mutate({
+        wsId,
+        data: {
           name: form.name,
           accountType: form.accountType,
           initialBalance: form.initialBalance,
         },
       });
-      if (err) setError("口座の作成に失敗しました");
     }
-
-    setSaving(false);
-    setOpen(false);
-    fetchAccounts();
   };
 
-  const handleDelete = async (accountId: string) => {
+  const handleDelete = (accountId: string) => {
     if (!confirm("この口座を削除しますか？")) return;
-    const { error: err } = await apiClient.DELETE("/workspaces/{wsId}/accounts/{accountId}", {
-      params: { path: { wsId, accountId } },
-    });
-    if (err) setError("口座の削除に失敗しました");
-    else fetchAccounts();
+    deleteMutation.mutate({ wsId, accountId });
   };
 
   const formatAmount = (val: string) =>
@@ -129,7 +137,7 @@ function AccountsPage() {
 
       {error && <p className="text-destructive text-sm mb-4">{error}</p>}
 
-      {loading ? (
+      {isLoading ? (
         <p className="text-muted-foreground text-sm">読み込み中...</p>
       ) : accounts.length === 0 ? (
         <Card>

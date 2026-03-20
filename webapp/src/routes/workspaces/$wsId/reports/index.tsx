@@ -1,12 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { apiClient } from "@/lib/api/client";
-import type { components } from "@/lib/api/schema";
+import { useGetCategoryExpenses, useGetAccountBalances } from "@/lib/api/generated/reports/reports";
 import { format, startOfMonth, endOfMonth } from "date-fns";
-
-type CategoryExpenseItem = components["schemas"]["CategoryExpenseItem"];
-type AccountBalanceItem = components["schemas"]["AccountBalanceItem"];
 
 export const Route = createFileRoute("/workspaces/$wsId/reports/")({
   component: ReportsPage,
@@ -14,42 +9,19 @@ export const Route = createFileRoute("/workspaces/$wsId/reports/")({
 
 function ReportsPage() {
   const { wsId } = Route.useParams();
-  const [categoryExpenses, setCategoryExpenses] = useState<
-    CategoryExpenseItem[]
-  >([]);
-  const [accountBalances, setAccountBalances] = useState<AccountBalanceItem[]>(
-    [],
-  );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const now = new Date();
-    const from = format(startOfMonth(now), "yyyy-MM-dd'T'HH:mm:ss'Z'");
-    const to = format(endOfMonth(now), "yyyy-MM-dd'T'HH:mm:ss'Z'");
-    const asOf = format(now, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+  const now = new Date();
+  const from = format(startOfMonth(now), "yyyy-MM-dd'T'HH:mm:ss'Z'");
+  const to = format(endOfMonth(now), "yyyy-MM-dd'T'HH:mm:ss'Z'");
+  const asOf = format(now, "yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    Promise.all([
-      apiClient.GET("/workspaces/{wsId}/reports/category-expenses", {
-        params: { path: { wsId }, query: { from, to } },
-      }),
-      apiClient.GET("/workspaces/{wsId}/reports/account-balances", {
-        params: { path: { wsId }, query: { asOf } },
-      }),
-    ]).then(([catRes, balRes]) => {
-      if (catRes.error) {
-        setError("カテゴリ別支出の取得に失敗しました");
-      } else {
-        setCategoryExpenses(catRes.data ?? []);
-      }
-      if (balRes.error) {
-        setError("口座残高の取得に失敗しました");
-      } else {
-        setAccountBalances(balRes.data ?? []);
-      }
-      setLoading(false);
-    });
-  }, [wsId]);
+  const { data: catResult, isLoading: catLoading, isError: catError } = useGetCategoryExpenses(wsId, { from, to });
+  const { data: balResult, isLoading: balLoading, isError: balError } = useGetAccountBalances(wsId, { asOf });
+
+  const categoryExpenses = catResult?.data ?? [];
+  const accountBalances = balResult?.data ?? [];
+  const isLoading = catLoading || balLoading;
+  const isError = catError || balError;
 
   const formatAmount = (val: string) =>
     new Intl.NumberFormat("ja-JP", {
@@ -57,24 +29,17 @@ function ReportsPage() {
       currency: "JPY",
     }).format(Number(val));
 
-  const maxExpense = Math.max(
-    ...categoryExpenses.map((c) => Number(c.totalExpense)),
-    1,
-  );
+  const maxExpense = Math.max(...categoryExpenses.map((c) => Number(c.totalExpense)), 1);
 
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-2">レポート</h1>
-      <p className="text-sm text-muted-foreground mb-6">
-        {format(new Date(), "yyyy年M月")}の集計
-      </p>
+      <p className="text-sm text-muted-foreground mb-6">{format(new Date(), "yyyy年M月")}の集計</p>
 
-      {loading && (
-        <p className="text-muted-foreground text-sm">読み込み中...</p>
-      )}
-      {error && <p className="text-destructive text-sm mb-4">{error}</p>}
+      {isLoading && <p className="text-muted-foreground text-sm">読み込み中...</p>}
+      {isError && <p className="text-destructive text-sm mb-4">データの取得に失敗しました</p>}
 
-      {!loading && (
+      {!isLoading && (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -82,22 +47,16 @@ function ReportsPage() {
             </CardHeader>
             <CardContent>
               {categoryExpenses.length === 0 ? (
-                <p className="text-muted-foreground text-sm">
-                  データがありません
-                </p>
+                <p className="text-muted-foreground text-sm">データがありません</p>
               ) : (
                 <div className="space-y-3">
                   {categoryExpenses
-                    .sort(
-                      (a, b) => Number(b.totalExpense) - Number(a.totalExpense),
-                    )
+                    .sort((a, b) => Number(b.totalExpense) - Number(a.totalExpense))
                     .map((item) => (
                       <div key={item.categoryId} className="space-y-1">
                         <div className="flex justify-between text-sm">
                           <span>{item.categoryName}</span>
-                          <span className="font-medium">
-                            {formatAmount(item.totalExpense)}
-                          </span>
+                          <span className="font-medium">{formatAmount(item.totalExpense)}</span>
                         </div>
                         <div className="h-2 bg-muted rounded-full overflow-hidden">
                           <div
@@ -120,16 +79,11 @@ function ReportsPage() {
             </CardHeader>
             <CardContent>
               {accountBalances.length === 0 ? (
-                <p className="text-muted-foreground text-sm">
-                  データがありません
-                </p>
+                <p className="text-muted-foreground text-sm">データがありません</p>
               ) : (
                 <div className="space-y-2">
                   {accountBalances.map((item) => (
-                    <div
-                      key={item.accountId}
-                      className="flex justify-between py-2 border-b last:border-0"
-                    >
+                    <div key={item.accountId} className="flex justify-between py-2 border-b last:border-0">
                       <span className="text-sm">{item.accountName}</span>
                       <span
                         className={`font-medium text-sm ${Number(item.currentBalance) >= 0 ? "text-green-600" : "text-red-600"}`}

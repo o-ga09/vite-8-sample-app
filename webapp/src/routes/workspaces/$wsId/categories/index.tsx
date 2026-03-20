@@ -1,37 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { apiClient } from "@/lib/api/client";
-import type { components } from "@/lib/api/schema";
+import {
+  useListCategories,
+  getListCategoriesQueryKey,
+  useCreateCategory,
+  useUpdateCategory,
+  useDeleteCategory,
+} from "@/lib/api/generated/categories/categories";
+import type { Category, CategoryType } from "@/lib/api/model";
 import { Plus, Pencil, Trash2 } from "lucide-react";
-
-type Category = components["schemas"]["Category"];
-type CategoryType = components["schemas"]["CategoryType"];
 
 export const Route = createFileRoute("/workspaces/$wsId/categories/")({
   component: CategoriesPage,
@@ -50,33 +35,48 @@ const emptyForm = {
 
 function CategoriesPage() {
   const { wsId } = Route.useParams();
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<Category | null>(null);
   const [form, setForm] = useState(emptyForm);
-  const [saving, setSaving] = useState(false);
 
-  const fetchCategories = useCallback(async () => {
-    setLoading(true);
-    const { data, error: err } = await apiClient.GET(
-      "/workspaces/{wsId}/categories",
-      {
-        params: { path: { wsId } },
+  const { data: listResult, isLoading } = useListCategories(wsId);
+  const categories = listResult?.data ?? [];
+
+  const invalidate = () =>
+    queryClient.invalidateQueries({
+      queryKey: getListCategoriesQueryKey(wsId),
+    });
+
+  const createMutation = useCreateCategory({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        setOpen(false);
       },
-    );
-    if (err) {
-      setError("カテゴリの取得に失敗しました");
-    } else {
-      setCategories(data ?? []);
-    }
-    setLoading(false);
-  }, [wsId]);
+      onError: () => setError("カテゴリの作成に失敗しました"),
+    },
+  });
+  const updateMutation = useUpdateCategory({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        setOpen(false);
+      },
+      onError: () => setError("カテゴリの更新に失敗しました"),
+    },
+  });
+  const deleteMutation = useDeleteCategory({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+      },
+      onError: () => setError("カテゴリの削除に失敗しました"),
+    },
+  });
 
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+  const saving = createMutation.isPending || updateMutation.isPending;
 
   const openCreate = () => {
     setEditTarget(null);
@@ -94,51 +94,23 @@ function CategoriesPage() {
     setOpen(true);
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!form.name.trim()) return;
-    setSaving(true);
-
     const body = {
       name: form.name,
       categoryType: form.categoryType,
       parentId: form.parentId || null,
     };
-
     if (editTarget) {
-      const { error: err } = await apiClient.PUT(
-        "/workspaces/{wsId}/categories/{categoryId}",
-        {
-          params: { path: { wsId, categoryId: editTarget.id } },
-          body,
-        },
-      );
-      if (err) setError("カテゴリの更新に失敗しました");
+      updateMutation.mutate({ wsId, categoryId: editTarget.id, data: body });
     } else {
-      const { error: err } = await apiClient.POST(
-        "/workspaces/{wsId}/categories",
-        {
-          params: { path: { wsId } },
-          body,
-        },
-      );
-      if (err) setError("カテゴリの作成に失敗しました");
+      createMutation.mutate({ wsId, data: body });
     }
-
-    setSaving(false);
-    setOpen(false);
-    fetchCategories();
   };
 
-  const handleDelete = async (categoryId: string) => {
+  const handleDelete = (categoryId: string) => {
     if (!confirm("このカテゴリを削除しますか？")) return;
-    const { error: err } = await apiClient.DELETE(
-      "/workspaces/{wsId}/categories/{categoryId}",
-      {
-        params: { path: { wsId, categoryId } },
-      },
-    );
-    if (err) setError("カテゴリの削除に失敗しました");
-    else fetchCategories();
+    deleteMutation.mutate({ wsId, categoryId });
   };
 
   const getParentName = (parentId: string | null | undefined) => {
@@ -158,7 +130,7 @@ function CategoriesPage() {
 
       {error && <p className="text-destructive text-sm mb-4">{error}</p>}
 
-      {loading ? (
+      {isLoading ? (
         <p className="text-muted-foreground text-sm">読み込み中...</p>
       ) : categories.length === 0 ? (
         <Card>
@@ -181,39 +153,21 @@ function CategoriesPage() {
               {categories.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell className="font-medium">
-                    {category.parentId && (
-                      <span className="text-muted-foreground mr-2">└</span>
-                    )}
+                    {category.parentId && <span className="text-muted-foreground mr-2">└</span>}
                     {category.name}
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      variant={
-                        category.categoryType === "income"
-                          ? "default"
-                          : "destructive"
-                      }
-                    >
+                    <Badge variant={category.categoryType === "income" ? "default" : "destructive"}>
                       {CATEGORY_TYPE_LABELS[category.categoryType]}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {getParentName(category.parentId)}
-                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{getParentName(category.parentId)}</TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => openEdit(category)}
-                      >
+                      <Button size="icon" variant="ghost" onClick={() => openEdit(category)}>
                         <Pencil size={14} />
                       </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleDelete(category.id)}
-                      >
+                      <Button size="icon" variant="ghost" onClick={() => handleDelete(category.id)}>
                         <Trash2 size={14} />
                       </Button>
                     </div>
@@ -228,9 +182,7 @@ function CategoriesPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {editTarget ? "カテゴリを編集" : "カテゴリを追加"}
-            </DialogTitle>
+            <DialogTitle>{editTarget ? "カテゴリを編集" : "カテゴリを追加"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Input
@@ -240,9 +192,7 @@ function CategoriesPage() {
             />
             <Select
               value={form.categoryType}
-              onValueChange={(v) =>
-                setForm((f) => ({ ...f, categoryType: v as CategoryType }))
-              }
+              onValueChange={(v) => setForm((f) => ({ ...f, categoryType: v as CategoryType }))}
             >
               <SelectTrigger>
                 <SelectValue />

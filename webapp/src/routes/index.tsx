@@ -1,14 +1,16 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { apiClient } from "@/lib/api/client";
-import type { components } from "@/lib/api/schema";
+import {
+  useListWorkspaces,
+  getListWorkspacesQueryKey,
+  useCreateWorkspace,
+} from "@/lib/api/generated/workspaces/workspaces";
 import { Plus, Folder } from "lucide-react";
-
-type Workspace = components["schemas"]["Workspace"];
 
 export const Route = createFileRoute("/")({
   component: IndexPage,
@@ -16,46 +18,34 @@ export const Route = createFileRoute("/")({
 
 function IndexPage() {
   const navigate = useNavigate();
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [newName, setNewName] = useState("");
-  const [creating, setCreating] = useState(false);
 
-  const fetchWorkspaces = async () => {
-    setLoading(true);
-    const { data, error: err } = await apiClient.GET("/workspaces");
-    if (err) {
-      setError("ワークスペースの取得に失敗しました");
-    } else {
-      setWorkspaces(data ?? []);
-    }
-    setLoading(false);
-  };
+  const { data: listResult, isLoading, isError } = useListWorkspaces();
+  const workspaces = listResult?.data ?? [];
 
-  useEffect(() => {
-    fetchWorkspaces();
-  }, []);
+  const createMutation = useCreateWorkspace({
+    mutation: {
+      onSuccess: async (result) => {
+        await queryClient.invalidateQueries({
+          queryKey: getListWorkspacesQueryKey(),
+        });
+        setOpen(false);
+        setNewName("");
+        if (result.status === 201) {
+          await navigate({
+            to: "/workspaces/$wsId",
+            params: { wsId: result.data.id },
+          });
+        }
+      },
+    },
+  });
 
-  const handleCreate = async () => {
-    if (!newName.trim()) return;
-    setCreating(true);
-    const { data, error: err } = await apiClient.POST("/workspaces", {
-      body: { name: newName.trim() },
-    });
-    setCreating(false);
-    if (err) {
-      setError("ワークスペースの作成に失敗しました");
-      return;
-    }
-    setOpen(false);
-    setNewName("");
-    if (data) {
-      await navigate({ to: "/workspaces/$wsId", params: { wsId: data.id } });
-    } else {
-      fetchWorkspaces();
-    }
+  const handleCreate = () => {
+    if (!newName.trim() || createMutation.isPending) return;
+    createMutation.mutate({ data: { name: newName.trim() } });
   };
 
   return (
@@ -69,10 +59,10 @@ function IndexPage() {
           </Button>
         </div>
 
-        {loading && <p className="text-muted-foreground text-sm">読み込み中...</p>}
-        {error && <p className="text-destructive text-sm">{error}</p>}
+        {isLoading && <p className="text-muted-foreground text-sm">読み込み中...</p>}
+        {isError && <p className="text-destructive text-sm">ワークスペースの取得に失敗しました</p>}
 
-        {!loading && workspaces.length === 0 && (
+        {!isLoading && workspaces.length === 0 && (
           <Card className="text-center py-12">
             <CardContent>
               <p className="text-muted-foreground">ワークスペースがありません</p>
@@ -116,7 +106,7 @@ function IndexPage() {
             <Button variant="outline" onClick={() => setOpen(false)}>
               キャンセル
             </Button>
-            <Button onClick={handleCreate} disabled={creating || !newName.trim()}>
+            <Button onClick={handleCreate} disabled={createMutation.isPending || !newName.trim()}>
               作成
             </Button>
           </DialogFooter>

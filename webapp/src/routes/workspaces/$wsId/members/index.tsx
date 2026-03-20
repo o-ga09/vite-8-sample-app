@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -7,12 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { apiClient } from "@/lib/api/client";
-import type { components } from "@/lib/api/schema";
+import {
+  useListMembers,
+  getListMembersQueryKey,
+  useCreateMember,
+  useUpdateMember,
+  useDeleteMember,
+} from "@/lib/api/generated/members/members";
+import type { Member, MemberRole } from "@/lib/api/model";
 import { Plus, Pencil, Trash2 } from "lucide-react";
-
-type Member = components["schemas"]["Member"];
-type MemberRole = components["schemas"]["MemberRole"];
 
 export const Route = createFileRoute("/workspaces/$wsId/members/")({
   component: MembersPage,
@@ -38,30 +42,45 @@ const emptyForm = {
 
 function MembersPage() {
   const { wsId } = Route.useParams();
-  const [members, setMembers] = useState<Member[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<Member | null>(null);
   const [form, setForm] = useState(emptyForm);
-  const [saving, setSaving] = useState(false);
 
-  const fetchMembers = useCallback(async () => {
-    setLoading(true);
-    const { data, error: err } = await apiClient.GET("/workspaces/{wsId}/members", {
-      params: { path: { wsId } },
-    });
-    if (err) {
-      setError("メンバーの取得に失敗しました");
-    } else {
-      setMembers(data ?? []);
-    }
-    setLoading(false);
-  }, [wsId]);
+  const { data: listResult, isLoading } = useListMembers(wsId);
+  const members = listResult?.data ?? [];
 
-  useEffect(() => {
-    fetchMembers();
-  }, [fetchMembers]);
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: getListMembersQueryKey(wsId) });
+
+  const createMutation = useCreateMember({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        setOpen(false);
+      },
+      onError: () => setError("メンバーの追加に失敗しました"),
+    },
+  });
+  const updateMutation = useUpdateMember({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        setOpen(false);
+      },
+      onError: () => setError("メンバーの更新に失敗しました"),
+    },
+  });
+  const deleteMutation = useDeleteMember({
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+      },
+      onError: () => setError("メンバーの削除に失敗しました"),
+    },
+  });
+
+  const saving = createMutation.isPending || updateMutation.isPending;
 
   const openCreate = () => {
     setEditTarget(null);
@@ -79,40 +98,29 @@ function MembersPage() {
     setOpen(true);
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!form.displayName.trim()) return;
-    setSaving(true);
-
     if (editTarget) {
-      const { error: err } = await apiClient.PUT("/workspaces/{wsId}/members/{memberId}", {
-        params: { path: { wsId, memberId: editTarget.id } },
-        body: { displayName: form.displayName, role: form.role },
+      updateMutation.mutate({
+        wsId,
+        memberId: editTarget.id,
+        data: { displayName: form.displayName, role: form.role },
       });
-      if (err) setError("メンバーの更新に失敗しました");
     } else {
-      const { error: err } = await apiClient.POST("/workspaces/{wsId}/members", {
-        params: { path: { wsId } },
-        body: {
+      createMutation.mutate({
+        wsId,
+        data: {
           email: form.email,
           displayName: form.displayName,
           role: form.role,
         },
       });
-      if (err) setError("メンバーの追加に失敗しました");
     }
-
-    setSaving(false);
-    setOpen(false);
-    fetchMembers();
   };
 
-  const handleDelete = async (memberId: string) => {
+  const handleDelete = (memberId: string) => {
     if (!confirm("このメンバーを削除しますか？")) return;
-    const { error: err } = await apiClient.DELETE("/workspaces/{wsId}/members/{memberId}", {
-      params: { path: { wsId, memberId } },
-    });
-    if (err) setError("メンバーの削除に失敗しました");
-    else fetchMembers();
+    deleteMutation.mutate({ wsId, memberId });
   };
 
   return (
@@ -127,7 +135,7 @@ function MembersPage() {
 
       {error && <p className="text-destructive text-sm mb-4">{error}</p>}
 
-      {loading ? (
+      {isLoading ? (
         <p className="text-muted-foreground text-sm">読み込み中...</p>
       ) : members.length === 0 ? (
         <Card>
