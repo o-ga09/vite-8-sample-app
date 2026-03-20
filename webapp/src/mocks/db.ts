@@ -1,10 +1,4 @@
-import type {
-  Workspace,
-  Member,
-  Account,
-  Category,
-  Transaction,
-} from "@/lib/api/model";
+import type { Workspace, Member, Account, Category, Transaction } from "@/lib/api/model";
 
 // --- Workspaces ---
 export const workspaces: Workspace[] = [
