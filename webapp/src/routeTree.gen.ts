@@ -10,33 +10,120 @@
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as IndexRouteImport } from "./routes/index";
+import { Route as WorkspacesWsIdRouteRouteImport } from "./routes/workspaces/$wsId/route";
+import { Route as WorkspacesWsIdIndexRouteImport } from "./routes/workspaces/$wsId/index";
+import { Route as WorkspacesWsIdTransactionsIndexRouteImport } from "./routes/workspaces/$wsId/transactions/index";
+import { Route as WorkspacesWsIdReportsIndexRouteImport } from "./routes/workspaces/$wsId/reports/index";
+import { Route as WorkspacesWsIdMembersIndexRouteImport } from "./routes/workspaces/$wsId/members/index";
+import { Route as WorkspacesWsIdCategoriesIndexRouteImport } from "./routes/workspaces/$wsId/categories/index";
+import { Route as WorkspacesWsIdAccountsIndexRouteImport } from "./routes/workspaces/$wsId/accounts/index";
 
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => rootRouteImport,
 } as any);
+const WorkspacesWsIdRouteRoute = WorkspacesWsIdRouteRouteImport.update({
+  id: "/workspaces/$wsId",
+  path: "/workspaces/$wsId",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const WorkspacesWsIdIndexRoute = WorkspacesWsIdIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => WorkspacesWsIdRouteRoute,
+} as any);
+const WorkspacesWsIdTransactionsIndexRoute = WorkspacesWsIdTransactionsIndexRouteImport.update({
+  id: "/transactions/",
+  path: "/transactions/",
+  getParentRoute: () => WorkspacesWsIdRouteRoute,
+} as any);
+const WorkspacesWsIdReportsIndexRoute = WorkspacesWsIdReportsIndexRouteImport.update({
+  id: "/reports/",
+  path: "/reports/",
+  getParentRoute: () => WorkspacesWsIdRouteRoute,
+} as any);
+const WorkspacesWsIdMembersIndexRoute = WorkspacesWsIdMembersIndexRouteImport.update({
+  id: "/members/",
+  path: "/members/",
+  getParentRoute: () => WorkspacesWsIdRouteRoute,
+} as any);
+const WorkspacesWsIdCategoriesIndexRoute = WorkspacesWsIdCategoriesIndexRouteImport.update({
+  id: "/categories/",
+  path: "/categories/",
+  getParentRoute: () => WorkspacesWsIdRouteRoute,
+} as any);
+const WorkspacesWsIdAccountsIndexRoute = WorkspacesWsIdAccountsIndexRouteImport.update({
+  id: "/accounts/",
+  path: "/accounts/",
+  getParentRoute: () => WorkspacesWsIdRouteRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
+  "/workspaces/$wsId": typeof WorkspacesWsIdRouteRouteWithChildren;
+  "/workspaces/$wsId/": typeof WorkspacesWsIdIndexRoute;
+  "/workspaces/$wsId/accounts/": typeof WorkspacesWsIdAccountsIndexRoute;
+  "/workspaces/$wsId/categories/": typeof WorkspacesWsIdCategoriesIndexRoute;
+  "/workspaces/$wsId/members/": typeof WorkspacesWsIdMembersIndexRoute;
+  "/workspaces/$wsId/reports/": typeof WorkspacesWsIdReportsIndexRoute;
+  "/workspaces/$wsId/transactions/": typeof WorkspacesWsIdTransactionsIndexRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
+  "/workspaces/$wsId": typeof WorkspacesWsIdIndexRoute;
+  "/workspaces/$wsId/accounts": typeof WorkspacesWsIdAccountsIndexRoute;
+  "/workspaces/$wsId/categories": typeof WorkspacesWsIdCategoriesIndexRoute;
+  "/workspaces/$wsId/members": typeof WorkspacesWsIdMembersIndexRoute;
+  "/workspaces/$wsId/reports": typeof WorkspacesWsIdReportsIndexRoute;
+  "/workspaces/$wsId/transactions": typeof WorkspacesWsIdTransactionsIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
+  "/workspaces/$wsId": typeof WorkspacesWsIdRouteRouteWithChildren;
+  "/workspaces/$wsId/": typeof WorkspacesWsIdIndexRoute;
+  "/workspaces/$wsId/accounts/": typeof WorkspacesWsIdAccountsIndexRoute;
+  "/workspaces/$wsId/categories/": typeof WorkspacesWsIdCategoriesIndexRoute;
+  "/workspaces/$wsId/members/": typeof WorkspacesWsIdMembersIndexRoute;
+  "/workspaces/$wsId/reports/": typeof WorkspacesWsIdReportsIndexRoute;
+  "/workspaces/$wsId/transactions/": typeof WorkspacesWsIdTransactionsIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
+  fullPaths:
+    | "/"
+    | "/workspaces/$wsId"
+    | "/workspaces/$wsId/"
+    | "/workspaces/$wsId/accounts/"
+    | "/workspaces/$wsId/categories/"
+    | "/workspaces/$wsId/members/"
+    | "/workspaces/$wsId/reports/"
+    | "/workspaces/$wsId/transactions/";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/";
+  to:
+    | "/"
+    | "/workspaces/$wsId"
+    | "/workspaces/$wsId/accounts"
+    | "/workspaces/$wsId/categories"
+    | "/workspaces/$wsId/members"
+    | "/workspaces/$wsId/reports"
+    | "/workspaces/$wsId/transactions";
+  id:
+    | "__root__"
+    | "/"
+    | "/workspaces/$wsId"
+    | "/workspaces/$wsId/"
+    | "/workspaces/$wsId/accounts/"
+    | "/workspaces/$wsId/categories/"
+    | "/workspaces/$wsId/members/"
+    | "/workspaces/$wsId/reports/"
+    | "/workspaces/$wsId/transactions/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
+  WorkspacesWsIdRouteRoute: typeof WorkspacesWsIdRouteRouteWithChildren;
 }
 
 declare module "@tanstack/react-router" {
@@ -48,10 +135,82 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/workspaces/$wsId": {
+      id: "/workspaces/$wsId";
+      path: "/workspaces/$wsId";
+      fullPath: "/workspaces/$wsId";
+      preLoaderRoute: typeof WorkspacesWsIdRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/workspaces/$wsId/": {
+      id: "/workspaces/$wsId/";
+      path: "/";
+      fullPath: "/workspaces/$wsId/";
+      preLoaderRoute: typeof WorkspacesWsIdIndexRouteImport;
+      parentRoute: typeof WorkspacesWsIdRouteRoute;
+    };
+    "/workspaces/$wsId/transactions/": {
+      id: "/workspaces/$wsId/transactions/";
+      path: "/transactions";
+      fullPath: "/workspaces/$wsId/transactions/";
+      preLoaderRoute: typeof WorkspacesWsIdTransactionsIndexRouteImport;
+      parentRoute: typeof WorkspacesWsIdRouteRoute;
+    };
+    "/workspaces/$wsId/reports/": {
+      id: "/workspaces/$wsId/reports/";
+      path: "/reports";
+      fullPath: "/workspaces/$wsId/reports/";
+      preLoaderRoute: typeof WorkspacesWsIdReportsIndexRouteImport;
+      parentRoute: typeof WorkspacesWsIdRouteRoute;
+    };
+    "/workspaces/$wsId/members/": {
+      id: "/workspaces/$wsId/members/";
+      path: "/members";
+      fullPath: "/workspaces/$wsId/members/";
+      preLoaderRoute: typeof WorkspacesWsIdMembersIndexRouteImport;
+      parentRoute: typeof WorkspacesWsIdRouteRoute;
+    };
+    "/workspaces/$wsId/categories/": {
+      id: "/workspaces/$wsId/categories/";
+      path: "/categories";
+      fullPath: "/workspaces/$wsId/categories/";
+      preLoaderRoute: typeof WorkspacesWsIdCategoriesIndexRouteImport;
+      parentRoute: typeof WorkspacesWsIdRouteRoute;
+    };
+    "/workspaces/$wsId/accounts/": {
+      id: "/workspaces/$wsId/accounts/";
+      path: "/accounts";
+      fullPath: "/workspaces/$wsId/accounts/";
+      preLoaderRoute: typeof WorkspacesWsIdAccountsIndexRouteImport;
+      parentRoute: typeof WorkspacesWsIdRouteRoute;
+    };
   }
 }
 
+interface WorkspacesWsIdRouteRouteChildren {
+  WorkspacesWsIdIndexRoute: typeof WorkspacesWsIdIndexRoute;
+  WorkspacesWsIdAccountsIndexRoute: typeof WorkspacesWsIdAccountsIndexRoute;
+  WorkspacesWsIdCategoriesIndexRoute: typeof WorkspacesWsIdCategoriesIndexRoute;
+  WorkspacesWsIdMembersIndexRoute: typeof WorkspacesWsIdMembersIndexRoute;
+  WorkspacesWsIdReportsIndexRoute: typeof WorkspacesWsIdReportsIndexRoute;
+  WorkspacesWsIdTransactionsIndexRoute: typeof WorkspacesWsIdTransactionsIndexRoute;
+}
+
+const WorkspacesWsIdRouteRouteChildren: WorkspacesWsIdRouteRouteChildren = {
+  WorkspacesWsIdIndexRoute: WorkspacesWsIdIndexRoute,
+  WorkspacesWsIdAccountsIndexRoute: WorkspacesWsIdAccountsIndexRoute,
+  WorkspacesWsIdCategoriesIndexRoute: WorkspacesWsIdCategoriesIndexRoute,
+  WorkspacesWsIdMembersIndexRoute: WorkspacesWsIdMembersIndexRoute,
+  WorkspacesWsIdReportsIndexRoute: WorkspacesWsIdReportsIndexRoute,
+  WorkspacesWsIdTransactionsIndexRoute: WorkspacesWsIdTransactionsIndexRoute,
+};
+
+const WorkspacesWsIdRouteRouteWithChildren = WorkspacesWsIdRouteRoute._addFileChildren(
+  WorkspacesWsIdRouteRouteChildren,
+);
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  WorkspacesWsIdRouteRoute: WorkspacesWsIdRouteRouteWithChildren,
 };
 export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
