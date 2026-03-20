@@ -8,20 +8,20 @@ import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   lazy: async () => ({
     plugins: [
       TanStackRouterVite({
         routesDirectory: "./src/routes",
         generatedRouteTree: "./src/routeTree.gen.ts",
       }),
-      ...react(),
-      ...tailwindcss(),
-    ],
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
-    },
+      react(),
+      tailwindcss(),
+    ].flat(),
     server: {
       port: 13001,
     },
