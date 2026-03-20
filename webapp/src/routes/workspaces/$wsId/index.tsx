@@ -38,14 +38,21 @@ function DashboardPage() {
   }, [wsId]);
 
   const formatAmount = (val: string) =>
-    new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY" }).format(Number(val));
+    new Intl.NumberFormat("ja-JP", {
+      style: "currency",
+      currency: "JPY",
+    }).format(Number(val));
 
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-6">ダッシュボード</h1>
-      <p className="text-sm text-muted-foreground mb-6">{format(new Date(), "yyyy年M月")}の集計</p>
+      <p className="text-sm text-muted-foreground mb-6">
+        {format(new Date(), "yyyy年M月")}の集計
+      </p>
 
-      {loading && <p className="text-muted-foreground text-sm">読み込み中...</p>}
+      {loading && (
+        <p className="text-muted-foreground text-sm">読み込み中...</p>
+      )}
       {error && <p className="text-destructive text-sm">{error}</p>}
 
       {report && (
@@ -72,7 +79,9 @@ function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-red-600">{formatAmount(report.totalExpense)}</p>
+              <p className="text-2xl font-bold text-red-600">
+                {formatAmount(report.totalExpense)}
+              </p>
             </CardContent>
           </Card>
 

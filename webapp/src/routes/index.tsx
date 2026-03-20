@@ -75,14 +75,22 @@ function IndexPage() {
           </Button>
         </div>
 
-        {loading && <p className="text-muted-foreground text-sm">読み込み中...</p>}
+        {loading && (
+          <p className="text-muted-foreground text-sm">読み込み中...</p>
+        )}
         {error && <p className="text-destructive text-sm">{error}</p>}
 
         {!loading && workspaces.length === 0 && (
           <Card className="text-center py-12">
             <CardContent>
-              <p className="text-muted-foreground">ワークスペースがありません</p>
-              <Button variant="outline" className="mt-4" onClick={() => setOpen(true)}>
+              <p className="text-muted-foreground">
+                ワークスペースがありません
+              </p>
+              <Button
+                variant="outline"
+                className="mt-4"
+                onClick={() => setOpen(true)}
+              >
                 最初のワークスペースを作成する
               </Button>
             </CardContent>
@@ -94,7 +102,9 @@ function IndexPage() {
             <Card
               key={ws.id}
               className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => navigate({ to: "/workspaces/$wsId", params: { wsId: ws.id } })}
+              onClick={() =>
+                navigate({ to: "/workspaces/$wsId", params: { wsId: ws.id } })
+              }
             >
               <CardHeader className="py-4">
                 <CardTitle className="flex items-center gap-2 text-base">
@@ -122,7 +132,10 @@ function IndexPage() {
             <Button variant="outline" onClick={() => setOpen(false)}>
               キャンセル
             </Button>
-            <Button onClick={handleCreate} disabled={creating || !newName.trim()}>
+            <Button
+              onClick={handleCreate}
+              disabled={creating || !newName.trim()}
+            >
               作成
             </Button>
           </DialogFooter>

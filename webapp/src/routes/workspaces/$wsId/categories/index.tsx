@@ -60,9 +60,12 @@ function CategoriesPage() {
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
-    const { data, error: err } = await apiClient.GET("/workspaces/{wsId}/categories", {
-      params: { path: { wsId } },
-    });
+    const { data, error: err } = await apiClient.GET(
+      "/workspaces/{wsId}/categories",
+      {
+        params: { path: { wsId } },
+      },
+    );
     if (err) {
       setError("カテゴリの取得に失敗しました");
     } else {
@@ -102,16 +105,22 @@ function CategoriesPage() {
     };
 
     if (editTarget) {
-      const { error: err } = await apiClient.PUT("/workspaces/{wsId}/categories/{categoryId}", {
-        params: { path: { wsId, categoryId: editTarget.id } },
-        body,
-      });
+      const { error: err } = await apiClient.PUT(
+        "/workspaces/{wsId}/categories/{categoryId}",
+        {
+          params: { path: { wsId, categoryId: editTarget.id } },
+          body,
+        },
+      );
       if (err) setError("カテゴリの更新に失敗しました");
     } else {
-      const { error: err } = await apiClient.POST("/workspaces/{wsId}/categories", {
-        params: { path: { wsId } },
-        body,
-      });
+      const { error: err } = await apiClient.POST(
+        "/workspaces/{wsId}/categories",
+        {
+          params: { path: { wsId } },
+          body,
+        },
+      );
       if (err) setError("カテゴリの作成に失敗しました");
     }
 
@@ -122,9 +131,12 @@ function CategoriesPage() {
 
   const handleDelete = async (categoryId: string) => {
     if (!confirm("このカテゴリを削除しますか？")) return;
-    const { error: err } = await apiClient.DELETE("/workspaces/{wsId}/categories/{categoryId}", {
-      params: { path: { wsId, categoryId } },
-    });
+    const { error: err } = await apiClient.DELETE(
+      "/workspaces/{wsId}/categories/{categoryId}",
+      {
+        params: { path: { wsId, categoryId } },
+      },
+    );
     if (err) setError("カテゴリの削除に失敗しました");
     else fetchCategories();
   };
@@ -169,11 +181,19 @@ function CategoriesPage() {
               {categories.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell className="font-medium">
-                    {category.parentId && <span className="text-muted-foreground mr-2">└</span>}
+                    {category.parentId && (
+                      <span className="text-muted-foreground mr-2">└</span>
+                    )}
                     {category.name}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={category.categoryType === "income" ? "default" : "destructive"}>
+                    <Badge
+                      variant={
+                        category.categoryType === "income"
+                          ? "default"
+                          : "destructive"
+                      }
+                    >
                       {CATEGORY_TYPE_LABELS[category.categoryType]}
                     </Badge>
                   </TableCell>
@@ -182,10 +202,18 @@ function CategoriesPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button size="icon" variant="ghost" onClick={() => openEdit(category)}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => openEdit(category)}
+                      >
                         <Pencil size={14} />
                       </Button>
-                      <Button size="icon" variant="ghost" onClick={() => handleDelete(category.id)}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handleDelete(category.id)}
+                      >
                         <Trash2 size={14} />
                       </Button>
                     </div>
@@ -200,7 +228,9 @@ function CategoriesPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editTarget ? "カテゴリを編集" : "カテゴリを追加"}</DialogTitle>
+            <DialogTitle>
+              {editTarget ? "カテゴリを編集" : "カテゴリを追加"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Input
@@ -210,7 +240,9 @@ function CategoriesPage() {
             />
             <Select
               value={form.categoryType}
-              onValueChange={(v) => setForm((f) => ({ ...f, categoryType: v as CategoryType }))}
+              onValueChange={(v) =>
+                setForm((f) => ({ ...f, categoryType: v as CategoryType }))
+              }
             >
               <SelectTrigger>
                 <SelectValue />
@@ -222,7 +254,9 @@ function CategoriesPage() {
             </Select>
             <Select
               value={form.parentId || "none"}
-              onValueChange={(v) => setForm((f) => ({ ...f, parentId: v === "none" ? "" : v }))}
+              onValueChange={(v) =>
+                setForm((f) => ({ ...f, parentId: v === "none" ? "" : v }))
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="親カテゴリ（任意）" />

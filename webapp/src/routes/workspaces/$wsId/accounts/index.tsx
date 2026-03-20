@@ -63,9 +63,12 @@ function AccountsPage() {
 
   const fetchAccounts = useCallback(async () => {
     setLoading(true);
-    const { data, error: err } = await apiClient.GET("/workspaces/{wsId}/accounts", {
-      params: { path: { wsId } },
-    });
+    const { data, error: err } = await apiClient.GET(
+      "/workspaces/{wsId}/accounts",
+      {
+        params: { path: { wsId } },
+      },
+    );
     if (err) {
       setError("口座の取得に失敗しました");
     } else {
@@ -99,20 +102,26 @@ function AccountsPage() {
     setSaving(true);
 
     if (editTarget) {
-      const { error: err } = await apiClient.PUT("/workspaces/{wsId}/accounts/{accountId}", {
-        params: { path: { wsId, accountId: editTarget.id } },
-        body: { name: form.name, accountType: form.accountType },
-      });
+      const { error: err } = await apiClient.PUT(
+        "/workspaces/{wsId}/accounts/{accountId}",
+        {
+          params: { path: { wsId, accountId: editTarget.id } },
+          body: { name: form.name, accountType: form.accountType },
+        },
+      );
       if (err) setError("口座の更新に失敗しました");
     } else {
-      const { error: err } = await apiClient.POST("/workspaces/{wsId}/accounts", {
-        params: { path: { wsId } },
-        body: {
-          name: form.name,
-          accountType: form.accountType,
-          initialBalance: form.initialBalance,
+      const { error: err } = await apiClient.POST(
+        "/workspaces/{wsId}/accounts",
+        {
+          params: { path: { wsId } },
+          body: {
+            name: form.name,
+            accountType: form.accountType,
+            initialBalance: form.initialBalance,
+          },
         },
-      });
+      );
       if (err) setError("口座の作成に失敗しました");
     }
 
@@ -123,15 +132,21 @@ function AccountsPage() {
 
   const handleDelete = async (accountId: string) => {
     if (!confirm("この口座を削除しますか？")) return;
-    const { error: err } = await apiClient.DELETE("/workspaces/{wsId}/accounts/{accountId}", {
-      params: { path: { wsId, accountId } },
-    });
+    const { error: err } = await apiClient.DELETE(
+      "/workspaces/{wsId}/accounts/{accountId}",
+      {
+        params: { path: { wsId, accountId } },
+      },
+    );
     if (err) setError("口座の削除に失敗しました");
     else fetchAccounts();
   };
 
   const formatAmount = (val: string) =>
-    new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY" }).format(Number(val));
+    new Intl.NumberFormat("ja-JP", {
+      style: "currency",
+      currency: "JPY",
+    }).format(Number(val));
 
   return (
     <div className="p-8">
@@ -169,15 +184,25 @@ function AccountsPage() {
                 <TableRow key={account.id}>
                   <TableCell className="font-medium">{account.name}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{ACCOUNT_TYPE_LABELS[account.accountType]}</Badge>
+                    <Badge variant="secondary">
+                      {ACCOUNT_TYPE_LABELS[account.accountType]}
+                    </Badge>
                   </TableCell>
                   <TableCell>{formatAmount(account.initialBalance)}</TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button size="icon" variant="ghost" onClick={() => openEdit(account)}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => openEdit(account)}
+                      >
                         <Pencil size={14} />
                       </Button>
-                      <Button size="icon" variant="ghost" onClick={() => handleDelete(account.id)}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handleDelete(account.id)}
+                      >
                         <Trash2 size={14} />
                       </Button>
                     </div>
@@ -192,7 +217,9 @@ function AccountsPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editTarget ? "口座を編集" : "口座を追加"}</DialogTitle>
+            <DialogTitle>
+              {editTarget ? "口座を編集" : "口座を追加"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Input
@@ -202,17 +229,21 @@ function AccountsPage() {
             />
             <Select
               value={form.accountType}
-              onValueChange={(v) => setForm((f) => ({ ...f, accountType: v as AccountType }))}
+              onValueChange={(v) =>
+                setForm((f) => ({ ...f, accountType: v as AccountType }))
+              }
             >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {(Object.keys(ACCOUNT_TYPE_LABELS) as AccountType[]).map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {ACCOUNT_TYPE_LABELS[type]}
-                  </SelectItem>
-                ))}
+                {(Object.keys(ACCOUNT_TYPE_LABELS) as AccountType[]).map(
+                  (type) => (
+                    <SelectItem key={type} value={type}>
+                      {ACCOUNT_TYPE_LABELS[type]}
+                    </SelectItem>
+                  ),
+                )}
               </SelectContent>
             </Select>
             {!editTarget && (
@@ -220,7 +251,9 @@ function AccountsPage() {
                 placeholder="初期残高"
                 type="number"
                 value={form.initialBalance}
-                onChange={(e) => setForm((f) => ({ ...f, initialBalance: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, initialBalance: e.target.value }))
+                }
               />
             )}
           </div>

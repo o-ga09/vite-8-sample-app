@@ -44,7 +44,10 @@ const TX_TYPE_LABELS: Record<TransactionType, string> = {
   transfer: "振替",
 };
 
-const TX_TYPE_VARIANT: Record<TransactionType, "default" | "destructive" | "secondary"> = {
+const TX_TYPE_VARIANT: Record<
+  TransactionType,
+  "default" | "destructive" | "secondary"
+> = {
   income: "default",
   expense: "destructive",
   transfer: "secondary",
@@ -71,9 +74,12 @@ function TransactionsPage() {
 
   const fetchTransactions = useCallback(async () => {
     setLoading(true);
-    const { data, error: err } = await apiClient.GET("/workspaces/{wsId}/transactions", {
-      params: { path: { wsId } },
-    });
+    const { data, error: err } = await apiClient.GET(
+      "/workspaces/{wsId}/transactions",
+      {
+        params: { path: { wsId } },
+      },
+    );
     if (err) {
       setError("取引の取得に失敗しました");
     } else {
@@ -120,16 +126,22 @@ function TransactionsPage() {
     };
 
     if (editTarget) {
-      const { error: err } = await apiClient.PUT("/workspaces/{wsId}/transactions/{txId}", {
-        params: { path: { wsId, txId: editTarget.id } },
-        body,
-      });
+      const { error: err } = await apiClient.PUT(
+        "/workspaces/{wsId}/transactions/{txId}",
+        {
+          params: { path: { wsId, txId: editTarget.id } },
+          body,
+        },
+      );
       if (err) setError("取引の更新に失敗しました");
     } else {
-      const { error: err } = await apiClient.POST("/workspaces/{wsId}/transactions", {
-        params: { path: { wsId } },
-        body,
-      });
+      const { error: err } = await apiClient.POST(
+        "/workspaces/{wsId}/transactions",
+        {
+          params: { path: { wsId } },
+          body,
+        },
+      );
       if (err) setError("取引の作成に失敗しました");
     }
 
@@ -140,15 +152,21 @@ function TransactionsPage() {
 
   const handleDelete = async (txId: string) => {
     if (!confirm("この取引を削除しますか？")) return;
-    const { error: err } = await apiClient.DELETE("/workspaces/{wsId}/transactions/{txId}", {
-      params: { path: { wsId, txId } },
-    });
+    const { error: err } = await apiClient.DELETE(
+      "/workspaces/{wsId}/transactions/{txId}",
+      {
+        params: { path: { wsId, txId } },
+      },
+    );
     if (err) setError("取引の削除に失敗しました");
     else fetchTransactions();
   };
 
   const formatAmount = (val: string) =>
-    new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY" }).format(Number(val));
+    new Intl.NumberFormat("ja-JP", {
+      style: "currency",
+      currency: "JPY",
+    }).format(Number(val));
 
   return (
     <div className="p-8">
@@ -193,16 +211,26 @@ function TransactionsPage() {
                       {TX_TYPE_LABELS[tx.transactionType]}
                     </Badge>
                   </TableCell>
-                  <TableCell className="font-medium">{formatAmount(tx.amount)}</TableCell>
+                  <TableCell className="font-medium">
+                    {formatAmount(tx.amount)}
+                  </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {tx.description ?? "-"}
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button size="icon" variant="ghost" onClick={() => openEdit(tx)}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => openEdit(tx)}
+                      >
                         <Pencil size={14} />
                       </Button>
-                      <Button size="icon" variant="ghost" onClick={() => handleDelete(tx.id)}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handleDelete(tx.id)}
+                      >
                         <Trash2 size={14} />
                       </Button>
                     </div>
@@ -217,13 +245,18 @@ function TransactionsPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editTarget ? "取引を編集" : "取引を追加"}</DialogTitle>
+            <DialogTitle>
+              {editTarget ? "取引を編集" : "取引を追加"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Select
               value={form.transactionType}
               onValueChange={(v) =>
-                setForm((f) => ({ ...f, transactionType: v as TransactionType }))
+                setForm((f) => ({
+                  ...f,
+                  transactionType: v as TransactionType,
+                }))
               }
             >
               <SelectTrigger>
@@ -239,17 +272,23 @@ function TransactionsPage() {
               placeholder="金額"
               type="number"
               value={form.amount}
-              onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, amount: e.target.value }))
+              }
             />
             <Input
               type="datetime-local"
               value={form.occurredAt}
-              onChange={(e) => setForm((f) => ({ ...f, occurredAt: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, occurredAt: e.target.value }))
+              }
             />
             <Input
               placeholder="説明（任意）"
               value={form.description}
-              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, description: e.target.value }))
+              }
             />
           </div>
           <DialogFooter>

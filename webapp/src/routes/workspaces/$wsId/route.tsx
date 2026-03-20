@@ -1,5 +1,17 @@
-import { createFileRoute, Link, Outlet, useParams } from "@tanstack/react-router";
-import { BarChart3, CreditCard, FolderTree, LayoutDashboard, Users, Wallet } from "lucide-react";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useParams,
+} from "@tanstack/react-router";
+import {
+  BarChart3,
+  CreditCard,
+  FolderTree,
+  LayoutDashboard,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/workspaces/$wsId")({
