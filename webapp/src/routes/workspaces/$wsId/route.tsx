@@ -1,5 +1,17 @@
-import { createFileRoute, Link, Outlet, useParams } from "@tanstack/react-router";
-import { BarChart3, CreditCard, FolderTree, LayoutDashboard, Users, Wallet } from "lucide-react";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useParams,
+} from "@tanstack/react-router";
+import {
+  BarChart3,
+  CreditCard,
+  FolderTree,
+  LayoutDashboard,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/workspaces/$wsId")({
@@ -7,7 +19,7 @@ export const Route = createFileRoute("/workspaces/$wsId")({
 });
 
 const navItems = [
-  { to: "/workspaces/$wsId/", label: "ダッシュボード", icon: LayoutDashboard },
+  { to: "/workspaces/$wsId", label: "ダッシュボード", icon: LayoutDashboard },
   { to: "/workspaces/$wsId/transactions", label: "取引", icon: CreditCard },
   { to: "/workspaces/$wsId/accounts", label: "口座", icon: Wallet },
   { to: "/workspaces/$wsId/categories", label: "カテゴリ", icon: FolderTree },
@@ -22,7 +34,10 @@ function WorkspaceLayout() {
     <div className="flex min-h-screen bg-background">
       <aside className="w-60 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
-          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            to="/"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
             ← ワークスペース一覧
           </Link>
         </div>
