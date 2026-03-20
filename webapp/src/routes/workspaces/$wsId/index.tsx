@@ -61,7 +61,9 @@ function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-green-600">{formatAmount(report.totalIncome)}</p>
+              <p className="text-2xl font-bold text-green-600">
+                {formatAmount(report.totalIncome)}
+              </p>
             </CardContent>
           </Card>
 
@@ -85,7 +87,9 @@ function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className={`text-2xl font-bold ${Number(report.netFlow) >= 0 ? "text-green-600" : "text-red-600"}`}>
+              <p
+                className={`text-2xl font-bold ${Number(report.netFlow) >= 0 ? "text-green-600" : "text-red-600"}`}
+              >
                 {formatAmount(report.netFlow)}
               </p>
             </CardContent>

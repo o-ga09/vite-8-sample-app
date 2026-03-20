@@ -107,7 +107,10 @@ function ReportsPage() {
               ) : (
                 <div className="space-y-2">
                   {accountBalances.map((item) => (
-                    <div key={item.accountId} className="flex justify-between py-2 border-b last:border-0">
+                    <div
+                      key={item.accountId}
+                      className="flex justify-between py-2 border-b last:border-0"
+                    >
                       <span className="text-sm">{item.accountName}</span>
                       <span
                         className={`font-medium text-sm ${Number(item.balance) >= 0 ? "text-green-600" : "text-red-600"}`}
