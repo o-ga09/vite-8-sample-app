@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:mock": "vite --mode mock",
     "build": "tsgo && vite build",
     "check": "tsgo && oxlint . && oxfmt --config ./.oxfmt.json --check",
     "check:fix": "tsgo && oxlint . --fix && oxfmt --config ./.oxfmt.json --write",
@@ -40,6 +41,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "msw": "^2.12.13",
     "orval": "^8.5.3",
     "oxfmt": "^0.41.0",
     "oxlint": "^1.56.0",
@@ -48,5 +50,10 @@
     "vite": "^8.0.0",
     "vitest": "^3.2.0"
   },
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@10.32.1",
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
 }
