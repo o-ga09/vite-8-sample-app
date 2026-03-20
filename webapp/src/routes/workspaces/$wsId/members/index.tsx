@@ -2,29 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { apiClient } from "@/lib/api/client";
 import type { components } from "@/lib/api/schema";
@@ -67,12 +48,9 @@ function MembersPage() {
 
   const fetchMembers = useCallback(async () => {
     setLoading(true);
-    const { data, error: err } = await apiClient.GET(
-      "/workspaces/{wsId}/members",
-      {
-        params: { path: { wsId } },
-      },
-    );
+    const { data, error: err } = await apiClient.GET("/workspaces/{wsId}/members", {
+      params: { path: { wsId } },
+    });
     if (err) {
       setError("メンバーの取得に失敗しました");
     } else {
@@ -106,26 +84,20 @@ function MembersPage() {
     setSaving(true);
 
     if (editTarget) {
-      const { error: err } = await apiClient.PUT(
-        "/workspaces/{wsId}/members/{memberId}",
-        {
-          params: { path: { wsId, memberId: editTarget.id } },
-          body: { displayName: form.displayName, role: form.role },
-        },
-      );
+      const { error: err } = await apiClient.PUT("/workspaces/{wsId}/members/{memberId}", {
+        params: { path: { wsId, memberId: editTarget.id } },
+        body: { displayName: form.displayName, role: form.role },
+      });
       if (err) setError("メンバーの更新に失敗しました");
     } else {
-      const { error: err } = await apiClient.POST(
-        "/workspaces/{wsId}/members",
-        {
-          params: { path: { wsId } },
-          body: {
-            email: form.email,
-            displayName: form.displayName,
-            role: form.role,
-          },
+      const { error: err } = await apiClient.POST("/workspaces/{wsId}/members", {
+        params: { path: { wsId } },
+        body: {
+          email: form.email,
+          displayName: form.displayName,
+          role: form.role,
         },
-      );
+      });
       if (err) setError("メンバーの追加に失敗しました");
     }
 
@@ -136,12 +108,9 @@ function MembersPage() {
 
   const handleDelete = async (memberId: string) => {
     if (!confirm("このメンバーを削除しますか？")) return;
-    const { error: err } = await apiClient.DELETE(
-      "/workspaces/{wsId}/members/{memberId}",
-      {
-        params: { path: { wsId, memberId } },
-      },
-    );
+    const { error: err } = await apiClient.DELETE("/workspaces/{wsId}/members/{memberId}", {
+      params: { path: { wsId, memberId } },
+    });
     if (err) setError("メンバーの削除に失敗しました");
     else fetchMembers();
   };
@@ -180,31 +149,17 @@ function MembersPage() {
             <TableBody>
               {members.map((member) => (
                 <TableRow key={member.id}>
-                  <TableCell className="font-medium">
-                    {member.displayName}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {member.email}
-                  </TableCell>
+                  <TableCell className="font-medium">{member.displayName}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{member.email}</TableCell>
                   <TableCell>
-                    <Badge variant={ROLE_VARIANT[member.role]}>
-                      {ROLE_LABELS[member.role]}
-                    </Badge>
+                    <Badge variant={ROLE_VARIANT[member.role]}>{ROLE_LABELS[member.role]}</Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => openEdit(member)}
-                      >
+                      <Button size="icon" variant="ghost" onClick={() => openEdit(member)}>
                         <Pencil size={14} />
                       </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleDelete(member.id)}
-                      >
+                      <Button size="icon" variant="ghost" onClick={() => handleDelete(member.id)}>
                         <Trash2 size={14} />
                       </Button>
                     </div>
@@ -219,9 +174,7 @@ function MembersPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {editTarget ? "メンバーを編集" : "メンバーを追加"}
-            </DialogTitle>
+            <DialogTitle>{editTarget ? "メンバーを編集" : "メンバーを追加"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             {!editTarget && (
@@ -229,24 +182,15 @@ function MembersPage() {
                 placeholder="メールアドレス"
                 type="email"
                 value={form.email}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, email: e.target.value }))
-                }
+                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
               />
             )}
             <Input
               placeholder="表示名"
               value={form.displayName}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, displayName: e.target.value }))
-              }
+              onChange={(e) => setForm((f) => ({ ...f, displayName: e.target.value }))}
             />
-            <Select
-              value={form.role}
-              onValueChange={(v) =>
-                setForm((f) => ({ ...f, role: v as MemberRole }))
-              }
-            >
+            <Select value={form.role} onValueChange={(v) => setForm((f) => ({ ...f, role: v as MemberRole }))}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -261,10 +205,7 @@ function MembersPage() {
             <Button variant="outline" onClick={() => setOpen(false)}>
               キャンセル
             </Button>
-            <Button
-              onClick={handleSave}
-              disabled={saving || !form.displayName.trim()}
-            >
+            <Button onClick={handleSave} disabled={saving || !form.displayName.trim()}>
               {editTarget ? "更新" : "追加"}
             </Button>
           </DialogFooter>

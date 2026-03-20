@@ -46,13 +46,9 @@ function DashboardPage() {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-6">ダッシュボード</h1>
-      <p className="text-sm text-muted-foreground mb-6">
-        {format(new Date(), "yyyy年M月")}の集計
-      </p>
+      <p className="text-sm text-muted-foreground mb-6">{format(new Date(), "yyyy年M月")}の集計</p>
 
-      {loading && (
-        <p className="text-muted-foreground text-sm">読み込み中...</p>
-      )}
+      {loading && <p className="text-muted-foreground text-sm">読み込み中...</p>}
       {error && <p className="text-destructive text-sm">{error}</p>}
 
       {report && (
@@ -65,9 +61,7 @@ function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-green-600">
-                {formatAmount(report.totalIncome)}
-              </p>
+              <p className="text-2xl font-bold text-green-600">{formatAmount(report.totalIncome)}</p>
             </CardContent>
           </Card>
 
@@ -79,9 +73,7 @@ function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-red-600">
-                {formatAmount(report.totalExpense)}
-              </p>
+              <p className="text-2xl font-bold text-red-600">{formatAmount(report.totalExpense)}</p>
             </CardContent>
           </Card>
 
@@ -93,9 +85,7 @@ function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p
-                className={`text-2xl font-bold ${Number(report.netFlow) >= 0 ? "text-green-600" : "text-red-600"}`}
-              >
+              <p className={`text-2xl font-bold ${Number(report.netFlow) >= 0 ? "text-green-600" : "text-red-600"}`}>
                 {formatAmount(report.netFlow)}
               </p>
             </CardContent>
