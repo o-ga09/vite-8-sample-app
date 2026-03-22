@@ -119,7 +119,8 @@
                           "fill": "$text-muted",
                           "content": "02",
                           "fontFamily": "Space Grotesk",
-                          "fontSize": 11
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -128,7 +129,8 @@
                           "fill": "$text-secondary",
                           "content": "取引一覧",
                           "fontFamily": "Space Grotesk",
-                          "fontSize": 15
+                          "fontSize": 15,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -151,7 +153,8 @@
                           "fill": "$text-muted",
                           "content": "03",
                           "fontFamily": "Space Grotesk",
-                          "fontSize": 11
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -160,7 +163,8 @@
                           "fill": "$text-secondary",
                           "content": "カテゴリ",
                           "fontFamily": "Space Grotesk",
-                          "fontSize": 15
+                          "fontSize": 15,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -183,7 +187,8 @@
                           "fill": "$text-muted",
                           "content": "04",
                           "fontFamily": "Space Grotesk",
-                          "fontSize": 11
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -192,7 +197,8 @@
                           "fill": "$text-secondary",
                           "content": "レポート",
                           "fontFamily": "Space Grotesk",
-                          "fontSize": 15
+                          "fontSize": 15,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -215,7 +221,8 @@
                           "fill": "$text-muted",
                           "content": "05",
                           "fontFamily": "Space Grotesk",
-                          "fontSize": 11
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -224,7 +231,8 @@
                           "fill": "$text-secondary",
                           "content": "メンバー",
                           "fontFamily": "Space Grotesk",
-                          "fontSize": 15
+                          "fontSize": 15,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -442,7 +450,7 @@
                       "type": "text",
                       "id": "ILdc4",
                       "name": "c2value",
-                      "fill": "$text-primary",
+                      "fill": "$accent-green",
                       "content": "¥280,000",
                       "fontFamily": "Space Grotesk",
                       "fontSize": 36,
@@ -453,8 +461,8 @@
                       "type": "text",
                       "id": "zpRY2",
                       "name": "c2change",
-                      "fill": "$text-secondary",
-                      "content": "給与・副業収入",
+                      "fill": "$accent-green",
+                      "content": "+¥20,000 前月比 ↑",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -519,7 +527,7 @@
                     "fill": "$border-gray"
                   },
                   "layout": "vertical",
-                  "gap": 16,
+                  "gap": 12,
                   "padding": 28,
                   "children": [
                     {
@@ -548,10 +556,30 @@
                       "id": "HHmm1",
                       "name": "c4change",
                       "fill": "$text-secondary",
-                      "content": "目標: 20%",
+                      "content": "目標 20% まで ＋11.3%",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "r5ZPj",
+                      "name": "prog",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 4,
+                      "fill": "$surface-tint",
+                      "cornerRadius": 2,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "A1yuv",
+                          "width": 84,
+                          "height": 4,
+                          "fill": "$accent-green",
+                          "cornerRadius": 2
+                        }
+                      ]
                     }
                   ]
                 }
@@ -585,6 +613,7 @@
                       "id": "tyIwv",
                       "name": "Chart Header",
                       "width": "fill_container",
+                      "justifyContent": "space_between",
                       "alignItems": "center",
                       "children": [
                         {
@@ -596,6 +625,65 @@
                           "fontFamily": "Space Grotesk",
                           "fontSize": 16,
                           "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "rjVtE",
+                          "name": "leg",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "pI5ee",
+                              "gap": 5,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "rectangle",
+                                  "cornerRadius": 2,
+                                  "id": "M99Mj",
+                                  "fill": "#22C55E",
+                                  "width": 10,
+                                  "height": 10
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "uwZaM",
+                                  "fill": "$text-secondary",
+                                  "content": "収入",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "RzYgT",
+                              "gap": 5,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "rectangle",
+                                  "cornerRadius": 2,
+                                  "id": "wcciE",
+                                  "fill": "#E8372A",
+                                  "width": 10,
+                                  "height": 10
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "i0qEo",
+                                  "fill": "$text-secondary",
+                                  "content": "支出",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -620,11 +708,39 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "a3iaR",
-                              "name": "Bar Fill",
+                              "id": "Za4Fb",
                               "width": "fill_container",
                               "height": 140,
-                              "fill": "$surface-tint"
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Hefzq",
+                                  "width": "fill_container",
+                                  "height": 130,
+                                  "fill": "#BBF7D0",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "sFgoq",
+                                  "width": "fill_container",
+                                  "height": 108,
+                                  "fill": "#FECACA",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -649,11 +765,39 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "fdLm2",
-                              "name": "Bar Fill",
+                              "id": "bveD8",
                               "width": "fill_container",
                               "height": 120,
-                              "fill": "$surface-tint"
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "dSZ0M",
+                                  "width": "fill_container",
+                                  "height": 110,
+                                  "fill": "#BBF7D0",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Rd77k",
+                                  "width": "fill_container",
+                                  "height": 90,
+                                  "fill": "#FECACA",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -678,11 +822,39 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "TrSIf",
-                              "name": "Bar Fill",
+                              "id": "wptVN",
                               "width": "fill_container",
                               "height": 160,
-                              "fill": "$surface-tint"
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "348Bq",
+                                  "width": "fill_container",
+                                  "height": 150,
+                                  "fill": "#BBF7D0",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "lIPCS",
+                                  "width": "fill_container",
+                                  "height": 130,
+                                  "fill": "#FECACA",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -707,11 +879,39 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "OStHY",
-                              "name": "Bar Fill",
+                              "id": "nByoz",
                               "width": "fill_container",
                               "height": 100,
-                              "fill": "$surface-tint"
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "KeWP9",
+                                  "width": "fill_container",
+                                  "height": 92,
+                                  "fill": "#BBF7D0",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "SoYkK",
+                                  "width": "fill_container",
+                                  "height": 78,
+                                  "fill": "#FECACA",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -736,11 +936,39 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "YjwuQ",
-                              "name": "Bar Fill",
+                              "id": "NZAUp",
                               "width": "fill_container",
                               "height": 130,
-                              "fill": "$surface-tint"
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "iV26X",
+                                  "width": "fill_container",
+                                  "height": 118,
+                                  "fill": "#BBF7D0",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "SBT89",
+                                  "width": "fill_container",
+                                  "height": 103,
+                                  "fill": "#FECACA",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -765,11 +993,39 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "RT8xd",
-                              "name": "Bar Fill Active",
+                              "id": "59PrQ",
                               "width": "fill_container",
                               "height": 150,
-                              "fill": "$accent-red"
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "KLDKW",
+                                  "width": "fill_container",
+                                  "height": 142,
+                                  "fill": "#22C55E",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "oW62b",
+                                  "width": "fill_container",
+                                  "height": 119,
+                                  "fill": "#E8372A",
+                                  "cornerRadius": [
+                                    2,
+                                    2,
+                                    0,
+                                    0
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -876,7 +1132,8 @@
                               "fill": "$text-primary",
                               "content": "コンビニエンスストア",
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
@@ -944,7 +1201,8 @@
                               "fill": "$text-primary",
                               "content": "給与振込",
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
@@ -1012,7 +1270,8 @@
                               "fill": "$text-primary",
                               "content": "電気・ガス・水道",
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
@@ -1080,7 +1339,8 @@
                               "fill": "$text-primary",
                               "content": "スーパーマーケット",
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
@@ -1446,15 +1706,34 @@
               "alignItems": "center",
               "children": [
                 {
-                  "type": "text",
-                  "id": "Ue4dI",
-                  "name": "Page Title",
-                  "fill": "$text-primary",
-                  "content": "取引一覧",
-                  "fontFamily": "Space Grotesk",
-                  "fontSize": 36,
-                  "fontWeight": "700",
-                  "letterSpacing": -2
+                  "type": "frame",
+                  "id": "wbSPc",
+                  "name": "Title Block",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "xZJti",
+                      "name": "Page Title",
+                      "fill": "$text-primary",
+                      "content": "取引一覧",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 36,
+                      "fontWeight": "700",
+                      "letterSpacing": -1
+                    },
+                    {
+                      "type": "text",
+                      "id": "dSZtP",
+                      "name": "Period Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "2025年3月 · 125件の取引",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -2203,6 +2482,77 @@
                       "fontWeight": "600"
                     }
                   ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qXk8s",
+                  "name": "Table Footer",
+                  "width": "fill_container",
+                  "fill": "$surface-tint",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": {
+                      "top": 1
+                    },
+                    "fill": "$border-gray"
+                  },
+                  "padding": [
+                    14,
+                    24
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "08xQt",
+                      "name": "Footer Left",
+                      "fill": "$text-muted",
+                      "content": "3月の合計",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EHjpd",
+                      "name": "Footer Right",
+                      "gap": 20,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "141In",
+                          "name": "Footer Income",
+                          "fill": "$accent-green",
+                          "content": "収入 +¥260,000",
+                          "fontFamily": "Space Grotesk",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "0ZFP2",
+                          "name": "Footer Expense",
+                          "fill": "$accent-red",
+                          "content": "支出 −¥38,680",
+                          "fontFamily": "Space Grotesk",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "RXJo5",
+                          "name": "Footer Net",
+                          "fill": "$text-primary",
+                          "content": "差引 +¥221,320",
+                          "fontFamily": "Space Grotesk",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -2542,15 +2892,34 @@
               "alignItems": "center",
               "children": [
                 {
-                  "type": "text",
-                  "id": "SEFK2",
-                  "name": "Page Title",
-                  "fill": "$text-primary",
-                  "content": "カテゴリ",
-                  "fontFamily": "Space Grotesk",
-                  "fontSize": 36,
-                  "fontWeight": "700",
-                  "letterSpacing": -2
+                  "type": "frame",
+                  "id": "Yj3QV",
+                  "name": "Title Block",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GXlbG",
+                      "name": "Page Title",
+                      "fill": "$text-primary",
+                      "content": "カテゴリ",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 36,
+                      "fontWeight": "700",
+                      "letterSpacing": -1
+                    },
+                    {
+                      "type": "text",
+                      "id": "ZEtRd",
+                      "name": "Period Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "2025年3月 · 7カテゴリ",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -2912,6 +3281,44 @@
                               "fontFamily": "Inter",
                               "fontSize": 12,
                               "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "EfbEq",
+                              "name": "Budget Row",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "dIcWw",
+                                  "name": "BBG",
+                                  "width": "fill_container",
+                                  "height": 4,
+                                  "fill": "$surface-tint",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "mWKZ8",
+                                      "name": "BFill",
+                                      "width": 174,
+                                      "height": 4,
+                                      "fill": "#F59E0B"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "01xh8",
+                                  "name": "BLbl",
+                                  "fill": "$text-muted",
+                                  "content": "87% · ¥60,000 予算",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 10,
+                                  "fontWeight": "normal"
+                                }
+                              ]
                             }
                           ]
                         },
@@ -2991,6 +3398,44 @@
                               "fontFamily": "Inter",
                               "fontSize": 12,
                               "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "HVVOk",
+                              "name": "Budget Row",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "eRY1D",
+                                  "name": "BBG",
+                                  "width": "fill_container",
+                                  "height": 4,
+                                  "fill": "#FEE2E2",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "aysQX",
+                                      "name": "BFill",
+                                      "width": 200,
+                                      "height": 4,
+                                      "fill": "$accent-red"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "zj8wB",
+                                  "name": "BLbl",
+                                  "fill": "$accent-red",
+                                  "content": "予算超過 106% · ¥80,000",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 10,
+                                  "fontWeight": "600"
+                                }
+                              ]
                             }
                           ]
                         },
@@ -3070,6 +3515,44 @@
                               "fontFamily": "Inter",
                               "fontSize": 12,
                               "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "PTTu2",
+                              "name": "Budget Row",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "krjT8",
+                                  "name": "BBG",
+                                  "width": "fill_container",
+                                  "height": 4,
+                                  "fill": "$surface-tint",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "qRAHg",
+                                      "name": "BFill",
+                                      "width": 150,
+                                      "height": 4,
+                                      "fill": "$accent-green"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "xar0c",
+                                  "name": "BLbl",
+                                  "fill": "$text-muted",
+                                  "content": "75% · ¥25,000 予算",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 10,
+                                  "fontWeight": "normal"
+                                }
+                              ]
                             }
                           ]
                         },
@@ -3149,6 +3632,44 @@
                               "fontFamily": "Inter",
                               "fontSize": 12,
                               "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "pjPYs",
+                              "name": "Budget Row",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "AUZWC",
+                                  "name": "BBG",
+                                  "width": "fill_container",
+                                  "height": 4,
+                                  "fill": "$surface-tint",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "l4frn",
+                                      "name": "BFill",
+                                      "width": 128,
+                                      "height": 4,
+                                      "fill": "$accent-green"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "f78Oz",
+                                  "name": "BLbl",
+                                  "fill": "$text-muted",
+                                  "content": "64% · ¥20,000 予算",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 10,
+                                  "fontWeight": "normal"
+                                }
+                              ]
                             }
                           ]
                         },
@@ -3228,6 +3749,44 @@
                               "fontFamily": "Inter",
                               "fontSize": 12,
                               "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "QpxLs",
+                              "name": "Budget Row",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "knkCn",
+                                  "name": "BBG",
+                                  "width": "fill_container",
+                                  "height": 4,
+                                  "fill": "$surface-tint",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "BJZk5",
+                                      "name": "BFill",
+                                      "width": 110,
+                                      "height": 4,
+                                      "fill": "$accent-green"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "k8eXO",
+                                  "name": "BLbl",
+                                  "fill": "$text-muted",
+                                  "content": "55% · ¥15,000 予算",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 10,
+                                  "fontWeight": "normal"
+                                }
+                              ]
                             }
                           ]
                         },
@@ -3593,15 +4152,34 @@
               "alignItems": "center",
               "children": [
                 {
-                  "type": "text",
-                  "id": "OnCGN",
-                  "name": "Page Title",
-                  "fill": "$text-primary",
-                  "content": "レポート",
-                  "fontFamily": "Space Grotesk",
-                  "fontSize": 36,
-                  "fontWeight": "700",
-                  "letterSpacing": -2
+                  "type": "frame",
+                  "id": "VXPFi",
+                  "name": "Title Block",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LJBrT",
+                      "name": "Page Title",
+                      "fill": "$text-primary",
+                      "content": "レポート",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 36,
+                      "fontWeight": "700",
+                      "letterSpacing": -1
+                    },
+                    {
+                      "type": "text",
+                      "id": "izro7",
+                      "name": "Period Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "2025年3月 · 月次",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -3712,7 +4290,7 @@
                       "type": "text",
                       "id": "tQ4Rg",
                       "name": "sC1val",
-                      "fill": "$accent-green",
+                      "fill": "$white",
                       "content": "¥280,000",
                       "fontFamily": "Space Grotesk",
                       "fontSize": 28,
@@ -3723,8 +4301,8 @@
                       "type": "text",
                       "id": "yNcBA",
                       "name": "sC1chg",
-                      "fill": "$text-muted",
-                      "content": "前月 ¥260,000",
+                      "fill": "#86EFAC",
+                      "content": "↑ +7.7% 前月比",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -3851,14 +4429,87 @@
                   "padding": 24,
                   "children": [
                     {
-                      "type": "text",
-                      "id": "WH9Wo",
-                      "name": "Chart Title",
-                      "fill": "$text-primary",
-                      "content": "月次収支推移（2025年）",
-                      "fontFamily": "Space Grotesk",
-                      "fontSize": 14,
-                      "fontWeight": "600"
+                      "type": "frame",
+                      "id": "hcHaD",
+                      "name": "Chart Header",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "5j7Us",
+                          "name": "Title",
+                          "fill": "$text-primary",
+                          "content": "月次収支推移（2025年）",
+                          "fontFamily": "Space Grotesk",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Cc1rB",
+                          "name": "Legend",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "9e3tm",
+                              "name": "Inc Legend",
+                              "gap": 5,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "bOdpZ",
+                                  "name": "Inc Ind",
+                                  "width": 10,
+                                  "height": 10,
+                                  "fill": "$chart-income"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "z04fi",
+                                  "name": "Inc Lbl",
+                                  "fill": "$text-secondary",
+                                  "content": "収入",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "smdhr",
+                              "name": "Exp Legend",
+                              "gap": 5,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "4egUA",
+                                  "name": "Exp Ind",
+                                  "width": 10,
+                                  "height": 10,
+                                  "fill": "$chart-expense"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "Y8xVO",
+                                  "name": "Exp Lbl",
+                                  "fill": "$text-secondary",
+                                  "content": "支出",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "frame",
@@ -3886,16 +4537,28 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "nor32",
-                              "name": "Jan Bar",
-                              "width": 28,
-                              "height": 90,
-                              "fill": "$surface-tint",
-                              "stroke": {
-                                "align": "center",
-                                "thickness": 1,
-                                "fill": "$border-gray"
-                              }
+                              "id": "oUGc0",
+                              "name": "Jan Bars",
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "gy2sW",
+                                  "name": "Jan Income",
+                                  "width": 14,
+                                  "height": 85,
+                                  "fill": "#86EFAC"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "EmDAT",
+                                  "name": "Jan Expense",
+                                  "width": 14,
+                                  "height": 70,
+                                  "fill": "#FCA5A5"
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -3922,16 +4585,28 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "nJlqt",
-                              "name": "Feb Bar",
-                              "width": 28,
-                              "height": 110,
-                              "fill": "$surface-tint",
-                              "stroke": {
-                                "align": "center",
-                                "thickness": 1,
-                                "fill": "$border-gray"
-                              }
+                              "id": "B3Rsb",
+                              "name": "Feb Bars",
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "A8nvk",
+                                  "name": "Feb Income",
+                                  "width": 14,
+                                  "height": 98,
+                                  "fill": "#86EFAC"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "6P3Fm",
+                                  "name": "Feb Expense",
+                                  "width": 14,
+                                  "height": 80,
+                                  "fill": "#FCA5A5"
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -3958,11 +4633,28 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "FYVjh",
-                              "name": "Mar Bar",
-                              "width": 28,
-                              "height": 140,
-                              "fill": "$accent-red"
+                              "id": "5wKty",
+                              "name": "Mar Bars",
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "oqiMk",
+                                  "name": "Mar Income",
+                                  "width": 14,
+                                  "height": 115,
+                                  "fill": "$chart-income"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "0B4B0",
+                                  "name": "Mar Expense",
+                                  "width": 14,
+                                  "height": 92,
+                                  "fill": "$chart-expense"
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -3989,16 +4681,28 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "TWo1G",
-                              "name": "Apr Bar",
-                              "width": 28,
-                              "height": 105,
-                              "fill": "$surface-tint",
-                              "stroke": {
-                                "align": "center",
-                                "thickness": 1,
-                                "fill": "$border-gray"
-                              }
+                              "id": "Tnzc1",
+                              "name": "Apr Bars",
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "pFAhe",
+                                  "name": "Apr Income",
+                                  "width": 14,
+                                  "height": 88,
+                                  "fill": "#86EFAC"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "tNLil",
+                                  "name": "Apr Expense",
+                                  "width": 14,
+                                  "height": 72,
+                                  "fill": "#FCA5A5"
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -4025,16 +4729,28 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "1cq88",
-                              "name": "May Bar",
-                              "width": 28,
-                              "height": 120,
-                              "fill": "$surface-tint",
-                              "stroke": {
-                                "align": "center",
-                                "thickness": 1,
-                                "fill": "$border-gray"
-                              }
+                              "id": "XSTdM",
+                              "name": "May Bars",
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "FWY2w",
+                                  "name": "May Income",
+                                  "width": 14,
+                                  "height": 108,
+                                  "fill": "#86EFAC"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "O2kfm",
+                                  "name": "May Expense",
+                                  "width": 14,
+                                  "height": 86,
+                                  "fill": "#FCA5A5"
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -4061,16 +4777,28 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "x7LYZ",
-                              "name": "Jun Bar",
-                              "width": 28,
-                              "height": 130,
-                              "fill": "$surface-tint",
-                              "stroke": {
-                                "align": "center",
-                                "thickness": 1,
-                                "fill": "$border-gray"
-                              }
+                              "id": "5CR8J",
+                              "name": "Jun Bars",
+                              "gap": 3,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "bDe7g",
+                                  "name": "Jun Income",
+                                  "width": 14,
+                                  "height": 96,
+                                  "fill": "#86EFAC"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "masDW",
+                                  "name": "Jun Expense",
+                                  "width": 14,
+                                  "height": 78,
+                                  "fill": "#FCA5A5"
+                                }
+                              ]
                             },
                             {
                               "type": "text",
@@ -4210,7 +4938,7 @@
                                   "name": "Dot",
                                   "width": 8,
                                   "height": 8,
-                                  "fill": "$sidebar-bg"
+                                  "fill": "#1D4ED8"
                                 },
                                 {
                                   "type": "text",
@@ -4248,7 +4976,7 @@
                                   "name": "Bar Fill",
                                   "width": 200,
                                   "height": 6,
-                                  "fill": "$sidebar-bg"
+                                  "fill": "#1D4ED8"
                                 }
                               ]
                             }
@@ -4276,7 +5004,7 @@
                                   "name": "Dot",
                                   "width": 8,
                                   "height": 8,
-                                  "fill": "$text-secondary"
+                                  "fill": "#D97706"
                                 },
                                 {
                                   "type": "text",
@@ -4312,9 +5040,9 @@
                                   "type": "frame",
                                   "id": "5dQFX",
                                   "name": "Bar Fill",
-                                  "width": 68,
+                                  "width": 44,
                                   "height": 6,
-                                  "fill": "$text-secondary"
+                                  "fill": "#D97706"
                                 }
                               ]
                             }
@@ -4342,7 +5070,7 @@
                                   "name": "Dot",
                                   "width": 8,
                                   "height": 8,
-                                  "fill": "$text-muted"
+                                  "fill": "#7C3AED"
                                 },
                                 {
                                   "type": "text",
@@ -4378,9 +5106,9 @@
                                   "type": "frame",
                                   "id": "OPF4m",
                                   "name": "Bar Fill",
-                                  "width": 52,
+                                  "width": 30,
                                   "height": 6,
-                                  "fill": "$text-muted"
+                                  "fill": "#7C3AED"
                                 }
                               ]
                             }
@@ -4408,7 +5136,7 @@
                                   "name": "Dot",
                                   "width": 8,
                                   "height": 8,
-                                  "fill": "$border-gray"
+                                  "fill": "#0891B2"
                                 },
                                 {
                                   "type": "text",
@@ -4444,9 +5172,9 @@
                                   "type": "frame",
                                   "id": "ZrbBk",
                                   "name": "Bar Fill",
-                                  "width": 38,
+                                  "width": 19,
                                   "height": 6,
-                                  "fill": "$border-gray"
+                                  "fill": "#0891B2"
                                 }
                               ]
                             }
@@ -4584,15 +5312,34 @@
               "alignItems": "center",
               "children": [
                 {
-                  "type": "text",
-                  "id": "EEhxM",
-                  "name": "Heading",
-                  "fill": "$text-primary",
-                  "content": "ワークスペースを選択",
-                  "fontFamily": "Space Grotesk",
-                  "fontSize": 32,
-                  "fontWeight": "700",
-                  "letterSpacing": -1
+                  "type": "frame",
+                  "id": "4zics",
+                  "name": "Title Block",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "RnpGJ",
+                      "name": "Heading",
+                      "fill": "$text-primary",
+                      "content": "ワークスペースを選択",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 32,
+                      "fontWeight": "700",
+                      "letterSpacing": -1
+                    },
+                    {
+                      "type": "text",
+                      "id": "Fzt4J",
+                      "name": "Subheading",
+                      "fill": "$text-secondary",
+                      "content": "参加中のワークスペースから選択するか、新しく作成してください",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -4682,6 +5429,16 @@
                           "fontFamily": "Inter",
                           "fontSize": 13,
                           "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "IknGm",
+                          "name": "wsC1stats",
+                          "fill": "#86EFAC",
+                          "content": "今月の支出 ¥38,680 · 3月の取引 52件",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -4768,6 +5525,16 @@
                           "fontFamily": "Inter",
                           "fontSize": 13,
                           "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "lCOBc",
+                          "name": "wsC2stats",
+                          "fill": "$text-muted",
+                          "content": "今月の支出 ¥45,200 · 3月の取引 38件",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -4798,6 +5565,30 @@
                               "fontFamily": "Inter",
                               "fontSize": 11,
                               "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Rm1ed",
+                          "name": "Select Button",
+                          "fill": "$sidebar-bg",
+                          "gap": 6,
+                          "padding": [
+                            6,
+                            14
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "3Z8YE",
+                              "name": "SelectLabel",
+                              "fill": "$white",
+                              "content": "選択する",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 12,
+                              "fontWeight": "500"
                             }
                           ]
                         }
@@ -5168,15 +5959,34 @@
               "alignItems": "center",
               "children": [
                 {
-                  "type": "text",
-                  "id": "RhGGQ",
-                  "name": "Page Title",
-                  "fill": "$text-primary",
-                  "content": "メンバー",
-                  "fontFamily": "Space Grotesk",
-                  "fontSize": 36,
-                  "fontWeight": "700",
-                  "letterSpacing": -2
+                  "type": "frame",
+                  "id": "6ug2G",
+                  "name": "Title Block",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "wyFtG",
+                      "name": "Page Title",
+                      "fill": "$text-primary",
+                      "content": "メンバー",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 36,
+                      "fontWeight": "700",
+                      "letterSpacing": -1
+                    },
+                    {
+                      "type": "text",
+                      "id": "06Wuy",
+                      "name": "Period Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "田中家ワークスペース · 3名",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -9413,11 +10223,25 @@
   "variables": {
     "accent-green": {
       "type": "color",
-      "value": "#22C55E"
+      "value": [
+        {
+          "value": "#22C55E"
+        },
+        {
+          "value": "#16A34A"
+        }
+      ]
     },
     "accent-red": {
       "type": "color",
-      "value": "#FF3B30"
+      "value": [
+        {
+          "value": "#FF3B30"
+        },
+        {
+          "value": "#E8372A"
+        }
+      ]
     },
     "border-gray": {
       "type": "color",
@@ -9505,7 +10329,14 @@
     },
     "radius": {
       "type": "number",
-      "value": 6
+      "value": [
+        {
+          "value": 6
+        },
+        {
+          "value": 8
+        }
+      ]
     },
     "ring": {
       "type": "color",
@@ -9526,6 +10357,50 @@
     "success-foreground": {
       "type": "color",
       "value": "#FFFFFF"
+    },
+    "chart-expense": {
+      "type": "color",
+      "value": "#E8372A"
+    },
+    "chart-income": {
+      "type": "color",
+      "value": "#22C55E"
+    },
+    "chart-neutral": {
+      "type": "color",
+      "value": "#D4D4D4"
+    },
+    "expense-badge-bg": {
+      "type": "color",
+      "value": "#FEE2E2"
+    },
+    "expense-badge-text": {
+      "type": "color",
+      "value": "#DC2626"
+    },
+    "income-badge-bg": {
+      "type": "color",
+      "value": "#DCFCE7"
+    },
+    "income-badge-text": {
+      "type": "color",
+      "value": "#15803D"
+    },
+    "sidebar-nav-active-bg": {
+      "type": "color",
+      "value": "#1A1A1A"
+    },
+    "sidebar-number-active": {
+      "type": "color",
+      "value": "#E8372A"
+    },
+    "surface-hover": {
+      "type": "color",
+      "value": "#F0F0F0"
+    },
+    "tab-active-bg": {
+      "type": "color",
+      "value": "#0A0A0A"
     }
   }
 }
