@@ -25,9 +25,9 @@ func main() {
 func run() error {
 	ctx := context.Background()
 
-	dsn := os.Getenv("DSN")
+	dsn := os.Getenv("PSQL_DSN")
 	if dsn == "" {
-		return fmt.Errorf("DSN environment variable is required")
+		return fmt.Errorf("PSQL_DSN environment variable is required")
 	}
 
 	db, err := inframd.NewDB(dsn)
