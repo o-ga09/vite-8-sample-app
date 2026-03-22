@@ -20,6 +20,11 @@
         "env": {
           "GITHUB_PERSONAL_ACCESS_TOKEN":"${input:github-key}"
         }
+      },
+      "pencil": {
+        "command": "/Applications/Pencil.app/Contents/Resources/app.asar.unpacked/out/mcp-server-darwin-arm64",
+        "args": ["--app", "desktop"],
+        "env": {}
       }
     }
 }
