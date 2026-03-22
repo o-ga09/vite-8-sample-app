@@ -7,11 +7,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/aarondl/opt/null"
+	"github.com/aarondl/opt/omit"
+	"github.com/aarondl/opt/omitnull"
 	"github.com/google/uuid"
 	inframd "github.com/o-ga09/vite-8-sample-app/internal/infra/db"
+	models "github.com/o-ga09/vite-8-sample-app/internal/infra/dbgen"
 	enums "github.com/o-ga09/vite-8-sample-app/internal/infra/dbgen/dbenums"
-	"github.com/o-ga09/vite-8-sample-app/internal/infra/dbgen/factory"
 	"github.com/shopspring/decimal"
 )
 
@@ -35,132 +36,143 @@ func run() error {
 		return fmt.Errorf("failed to connect to database: %w", err)
 	}
 
-	f := factory.New()
-
 	// ワークスペースを作成する
-	ws, err := f.NewWorkspace(
-		factory.WorkspaceMods.Name("マイワークスペース"),
-	).Create(ctx, db)
+	ws, err := models.Workspaces.Insert(&models.WorkspaceSetter{
+		ID:   omit.From(uuid.New()),
+		Name: omit.From("マイワークスペース"),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create workspace: %w", err)
 	}
 	slog.Info("created workspace", "id", ws.ID, "name", ws.Name)
 
 	// メンバーを作成する
-	_, err = f.NewMember(
-		factory.MemberMods.WorkspaceID(ws.ID),
-		factory.MemberMods.Email("owner@example.com"),
-		factory.MemberMods.DisplayName("オーナー"),
-		factory.MemberMods.Role(enums.MemberRoleOwner),
-	).Create(ctx, db)
+	_, err = models.Members.Insert(&models.MemberSetter{
+		ID:          omit.From(uuid.New()),
+		WorkspaceID: omit.From(ws.ID),
+		Email:       omit.From("owner@example.com"),
+		DisplayName: omit.From("オーナー"),
+		Role:        omit.From(enums.MemberRoleOwner),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create owner: %w", err)
 	}
 
-	_, err = f.NewMember(
-		factory.MemberMods.WorkspaceID(ws.ID),
-		factory.MemberMods.Email("member@example.com"),
-		factory.MemberMods.DisplayName("メンバー"),
-		factory.MemberMods.Role(enums.MemberRoleMember),
-	).Create(ctx, db)
+	_, err = models.Members.Insert(&models.MemberSetter{
+		ID:          omit.From(uuid.New()),
+		WorkspaceID: omit.From(ws.ID),
+		Email:       omit.From("member@example.com"),
+		DisplayName: omit.From("メンバー"),
+		Role:        omit.From(enums.MemberRoleMember),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create member: %w", err)
 	}
 	slog.Info("created 2 members")
 
 	// 口座を作成する
-	cash, err := f.NewAccount(
-		factory.AccountMods.WorkspaceID(ws.ID),
-		factory.AccountMods.Name("財布"),
-		factory.AccountMods.AccountType(enums.AccountTypeCash),
-		factory.AccountMods.InitialBalance(decimal.NewFromFloat(10000)),
-	).Create(ctx, db)
+	cash, err := models.Accounts.Insert(&models.AccountSetter{
+		ID:             omit.From(uuid.New()),
+		WorkspaceID:    omit.From(ws.ID),
+		Name:           omit.From("財布"),
+		AccountType:    omit.From(enums.AccountTypeCash),
+		InitialBalance: omit.From(decimal.NewFromFloat(10000)),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create cash account: %w", err)
 	}
 
-	bank, err := f.NewAccount(
-		factory.AccountMods.WorkspaceID(ws.ID),
-		factory.AccountMods.Name("銀行口座"),
-		factory.AccountMods.AccountType(enums.AccountTypeBank),
-		factory.AccountMods.InitialBalance(decimal.NewFromFloat(500000)),
-	).Create(ctx, db)
+	bank, err := models.Accounts.Insert(&models.AccountSetter{
+		ID:             omit.From(uuid.New()),
+		WorkspaceID:    omit.From(ws.ID),
+		Name:           omit.From("銀行口座"),
+		AccountType:    omit.From(enums.AccountTypeBank),
+		InitialBalance: omit.From(decimal.NewFromFloat(500000)),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create bank account: %w", err)
 	}
 
-	_, err = f.NewAccount(
-		factory.AccountMods.WorkspaceID(ws.ID),
-		factory.AccountMods.Name("クレジットカード"),
-		factory.AccountMods.AccountType(enums.AccountTypeCreditCard),
-		factory.AccountMods.InitialBalance(decimal.NewFromFloat(0)),
-	).Create(ctx, db)
+	_, err = models.Accounts.Insert(&models.AccountSetter{
+		ID:             omit.From(uuid.New()),
+		WorkspaceID:    omit.From(ws.ID),
+		Name:           omit.From("クレジットカード"),
+		AccountType:    omit.From(enums.AccountTypeCreditCard),
+		InitialBalance: omit.From(decimal.NewFromFloat(0)),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create credit account: %w", err)
 	}
 	slog.Info("created 3 accounts")
 
 	// カテゴリを作成する（収入）
-	salary, err := f.NewCategory(
-		factory.CategoryMods.WorkspaceID(ws.ID),
-		factory.CategoryMods.Name("給与"),
-		factory.CategoryMods.CategoryType(enums.CategoryTypeIncome),
-	).Create(ctx, db)
+	salary, err := models.Categories.Insert(&models.CategorySetter{
+		ID:           omit.From(uuid.New()),
+		WorkspaceID:  omit.From(ws.ID),
+		Name:         omit.From("給与"),
+		CategoryType: omit.From(enums.CategoryTypeIncome),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create salary category: %w", err)
 	}
 
-	_, err = f.NewCategory(
-		factory.CategoryMods.WorkspaceID(ws.ID),
-		factory.CategoryMods.Name("副業"),
-		factory.CategoryMods.CategoryType(enums.CategoryTypeIncome),
-	).Create(ctx, db)
+	_, err = models.Categories.Insert(&models.CategorySetter{
+		ID:           omit.From(uuid.New()),
+		WorkspaceID:  omit.From(ws.ID),
+		Name:         omit.From("副業"),
+		CategoryType: omit.From(enums.CategoryTypeIncome),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create side income category: %w", err)
 	}
 
 	// カテゴリを作成する（支出）
-	food, err := f.NewCategory(
-		factory.CategoryMods.WorkspaceID(ws.ID),
-		factory.CategoryMods.Name("食費"),
-		factory.CategoryMods.CategoryType(enums.CategoryTypeExpense),
-	).Create(ctx, db)
+	food, err := models.Categories.Insert(&models.CategorySetter{
+		ID:           omit.From(uuid.New()),
+		WorkspaceID:  omit.From(ws.ID),
+		Name:         omit.From("食費"),
+		CategoryType: omit.From(enums.CategoryTypeExpense),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create food category: %w", err)
 	}
 
-	transport, err := f.NewCategory(
-		factory.CategoryMods.WorkspaceID(ws.ID),
-		factory.CategoryMods.Name("交通費"),
-		factory.CategoryMods.CategoryType(enums.CategoryTypeExpense),
-	).Create(ctx, db)
+	transport, err := models.Categories.Insert(&models.CategorySetter{
+		ID:           omit.From(uuid.New()),
+		WorkspaceID:  omit.From(ws.ID),
+		Name:         omit.From("交通費"),
+		CategoryType: omit.From(enums.CategoryTypeExpense),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create transport category: %w", err)
 	}
 
-	utility, err := f.NewCategory(
-		factory.CategoryMods.WorkspaceID(ws.ID),
-		factory.CategoryMods.Name("光熱費"),
-		factory.CategoryMods.CategoryType(enums.CategoryTypeExpense),
-	).Create(ctx, db)
+	utility, err := models.Categories.Insert(&models.CategorySetter{
+		ID:           omit.From(uuid.New()),
+		WorkspaceID:  omit.From(ws.ID),
+		Name:         omit.From("光熱費"),
+		CategoryType: omit.From(enums.CategoryTypeExpense),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create utility category: %w", err)
 	}
 
-	_, err = f.NewCategory(
-		factory.CategoryMods.WorkspaceID(ws.ID),
-		factory.CategoryMods.Name("娯楽費"),
-		factory.CategoryMods.CategoryType(enums.CategoryTypeExpense),
-	).Create(ctx, db)
+	_, err = models.Categories.Insert(&models.CategorySetter{
+		ID:           omit.From(uuid.New()),
+		WorkspaceID:  omit.From(ws.ID),
+		Name:         omit.From("娯楽費"),
+		CategoryType: omit.From(enums.CategoryTypeExpense),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create entertainment category: %w", err)
 	}
 
-	_, err = f.NewCategory(
-		factory.CategoryMods.WorkspaceID(ws.ID),
-		factory.CategoryMods.Name("医療費"),
-		factory.CategoryMods.CategoryType(enums.CategoryTypeExpense),
-	).Create(ctx, db)
+	_, err = models.Categories.Insert(&models.CategorySetter{
+		ID:           omit.From(uuid.New()),
+		WorkspaceID:  omit.From(ws.ID),
+		Name:         omit.From("医療費"),
+		CategoryType: omit.From(enums.CategoryTypeExpense),
+	}).One(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to create medical category: %w", err)
 	}
@@ -204,15 +216,16 @@ func run() error {
 
 	for i, s := range seeds {
 		d := baseMonth.AddDate(0, 0, s.day-1)
-		_, err = f.NewTransaction(
-			factory.TransactionMods.WorkspaceID(ws.ID),
-			factory.TransactionMods.AccountID(null.From(s.acctID)),
-			factory.TransactionMods.CategoryID(null.From(s.catID)),
-			factory.TransactionMods.TransactionType(s.txType),
-			factory.TransactionMods.Amount(decimal.NewFromFloat(s.amt)),
-			factory.TransactionMods.OccurredAt(d),
-			factory.TransactionMods.Description(null.From(s.desc)),
-		).Create(ctx, db)
+		_, err = models.Transactions.Insert(&models.TransactionSetter{
+			ID:              omit.From(uuid.New()),
+			WorkspaceID:     omit.From(ws.ID),
+			TransactionType: omit.From(s.txType),
+			AccountID:       omitnull.From(s.acctID),
+			CategoryID:      omitnull.From(s.catID),
+			Amount:          omit.From(decimal.NewFromFloat(s.amt)),
+			OccurredAt:      omit.From(d),
+			Description:     omitnull.From(s.desc),
+		}).One(ctx, db)
 		if err != nil {
 			return fmt.Errorf("failed to create transaction %d: %w", i, err)
 		}
